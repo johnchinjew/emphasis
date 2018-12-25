@@ -1,0 +1,119 @@
+/* SETUP */
+
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+html {
+    box-sizing: border-box;
+    font-family: "Quicksand", -apple-system, system-ui, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #E1E3E4;
+}
+
+
+
+/* APP */
+
+
+.app {
+    padding: 2rem;
+    font-size: 1.125rem;
+    line-height: 1.5;
+    color: #313334;
+}
+
+
+
+/* DESCRIPTION */
+
+
+.description {
+    max-width: 32rem;
+    margin: 0 auto;
+    margin-bottom: 175px; /* keep description visible */
+}
+
+.description ul {
+    padding-left: 0;
+}
+
+
+
+/* CLOCK WRAPPERS */
+
+
+.clocks-outer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0 2rem;
+    background: #E1E3E4;
+}
+
+.clocks-inner {
+    margin: 0 auto;
+    max-width: 32rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+
+
+/* CLOCK BUTTONS */
+
+
+.clock {
+    font-family: inherit;
+    border: 0;
+    outline: 0;
+    padding: 0;
+    background: none;
+    color: inherit;
+    font-size: inherit;
+    width: 4rem;
+    border-radius: 2rem 2rem 0 0;
+}
+
+.clock:nth-of-type(1).clock-on { background: #c3fdff; }
+.clock:nth-of-type(2).clock-on { background: #d7ffd9; }
+.clock:nth-of-type(3).clock-on { background: #d1d9ff; }
+.clock:nth-of-type(4).clock-on { background: #ffcccb; }
+
+
+
+/* CLOCK ICONS */
+
+
+.clock-icon {
+    margin-top: 1.25rem;
+    padding: 2rem 1rem;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 2rem;
+}
+
+.clock:nth-of-type(1) > .clock-icon { background-image: url("/images/icons/flag.svg"); }
+.clock:nth-of-type(2) > .clock-icon { background-image: url("/images/icons/flower.svg"); }
+.clock:nth-of-type(3) > .clock-icon { background-image: url("/images/icons/checked.svg"); }
+.clock:nth-of-type(4) > .clock-icon { background-image: url("/images/icons/alert.svg"); }
+
+
+
+/* CLOCK TIME LABEL */
+
+
+.clock-time {
+    padding-top: 0.5rem;
+    padding-bottom: 3.75rem;
+    font-weight: bold;
+}
