@@ -38,6 +38,7 @@ body {
     max-width: 40rem;
     margin: 0 auto;
     margin-bottom: 190px; /* keep description visible */
+    padding-top: 0.75rem;
 }
 
 .description ul {
@@ -95,7 +96,7 @@ body {
 
 
 .clock-icon {
-    margin-top: 1.25rem;
+    margin-top: 1.2rem;
     padding: 2rem 1rem;
     background-repeat: no-repeat;
     background-position: center;
@@ -114,7 +115,7 @@ body {
 
 .clock-time {
     padding-top: 0.5rem;
-    padding-bottom: 3.75rem;
+    padding-bottom: 3.25rem;
     font-weight: bold;
 }
 
