@@ -14,7 +14,7 @@ html {
 
 body {
     margin: 0;
-    background: #E1E3E4;
+    background: #E5E8E9;
 }
 
 
@@ -24,7 +24,7 @@ body {
 
 .app {
     padding: 2rem;
-    font-size: 1.125rem;
+    font-size: 18px;
     line-height: 1.5;
     color: #313334;
 }
@@ -35,9 +35,9 @@ body {
 
 
 .description {
-    max-width: 32rem;
+    max-width: 40rem;
     margin: 0 auto;
-    margin-bottom: 175px; /* keep description visible */
+    margin-bottom: 190px; /* keep description visible */
 }
 
 .description ul {
@@ -55,12 +55,12 @@ body {
     left: 0;
     right: 0;
     padding: 0 2rem;
-    background: #E1E3E4;
+    background: #E5E8E9;
 }
 
 .clocks-inner {
     margin: 0 auto;
-    max-width: 32rem;
+    max-width: 26rem;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -116,4 +116,23 @@ body {
     padding-top: 0.5rem;
     padding-bottom: 3.75rem;
     font-weight: bold;
+}
+
+
+
+/* DESKTOP SIZE */
+
+
+@media screen and (min-width: 44rem) {
+    .app {
+        font-size: 22px;
+    }
+
+    .clock-icon {
+        background-size: 2.25rem;
+    }
+
+    .clock-time {
+        padding-bottom: 4rem;
+    }
 }
