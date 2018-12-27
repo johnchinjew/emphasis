@@ -3,7 +3,7 @@ module Main exposing (main)
 import Browser
 import Html exposing (Html, b, button, div, h1, i, li, p, text, ul)
 import Html.Attributes exposing (class, classList)
-import Html.Events
+import Html.Events exposing (onClick)
 import Task
 import Time
 
@@ -22,19 +22,19 @@ main =
 
 
 type Emphasis
-    = Idle
-    | Critical
-    | Meaningful
-    | Interruptive
-    | Subtractive
+    = NoEmphasis
+    | Focus
+    | Task
+    | Rest
+    | Idle
 
 
 type alias Model =
     { time : Time.Posix
-    , critical : Int
-    , meaningful : Int
-    , interruptive : Int
-    , subtractive : Int
+    , focus : Int
+    , task : Int
+    , rest : Int
+    , idle : Int
     , emphasis : Emphasis
     }
 
@@ -71,20 +71,20 @@ update msg model =
 
                 newModel =
                     case model.emphasis of
-                        Idle ->
+                        NoEmphasis ->
                             model
 
-                        Critical ->
-                            { model | critical = model.critical + deltaMillis }
+                        Focus ->
+                            { model | focus = model.focus + deltaMillis }
 
-                        Meaningful ->
-                            { model | meaningful = model.meaningful + deltaMillis }
+                        Task ->
+                            { model | task = model.task + deltaMillis }
 
-                        Interruptive ->
-                            { model | interruptive = model.interruptive + deltaMillis }
+                        Rest ->
+                            { model | rest = model.rest + deltaMillis }
 
-                        Subtractive ->
-                            { model | subtractive = model.subtractive + deltaMillis }
+                        Idle ->
+                            { model | idle = model.idle + deltaMillis }
 
                 dayAsMillis =
                     24 * 60 * 60 * 1000
@@ -129,10 +129,10 @@ view model =
             , description model.emphasis
             , div [ class "clocks-outer" ]
                 [ div [ class "clocks-inner" ]
-                    [ clock Critical model.critical model.emphasis
-                    , clock Meaningful model.meaningful model.emphasis
-                    , clock Interruptive model.interruptive model.emphasis
-                    , clock Subtractive model.subtractive model.emphasis
+                    [ btn Focus model.emphasis
+                    , btn Task model.emphasis
+                    , btn Rest model.emphasis
+                    , btn Idle model.emphasis
                     ]
                 ]
             ]
@@ -140,25 +140,30 @@ view model =
     }
 
 
+emphasisToString : Emphasis -> String
+emphasisToString emphasis =
+    case emphasis of
+        NoEmphasis ->
+            ""
+
+        Focus ->
+            "Focus"
+
+        Task ->
+            "Task"
+
+        Rest ->
+            "Rest"
+
+        Idle ->
+            "Idle"
+
+
 title : Emphasis -> String
 title emphasis =
     let
         subtitle =
-            case emphasis of
-                Idle ->
-                    ""
-
-                Critical ->
-                    "Critical"
-
-                Meaningful ->
-                    "Meaningful"
-
-                Interruptive ->
-                    "Interruptive"
-
-                Subtractive ->
-                    "Subtractive"
+            emphasisToString emphasis
     in
     "Emphasis"
         ++ (if subtitle /= "" then
@@ -172,41 +177,63 @@ title emphasis =
 description : Emphasis -> Html Msg
 description emphasis =
     case emphasis of
-        Idle ->
+        NoEmphasis ->
             p [] [ text "Tap on an ", i [] [ text "emphasis" ], text " below to begin." ]
 
-        Critical ->
+        Focus ->
             p [] [ text "Important and time-sensitive tasks, requiring focus and effort." ]
 
-        Meaningful ->
-            p [] [ text "Regenerative activity which yields long-term benefit." ]
-
-        Interruptive ->
+        Task ->
             p [] [ text "Helpful but interruptive activity that may distract." ]
 
-        Subtractive ->
+        Rest ->
+            p [] [ text "Regenerative activity which yields long-term benefit." ]
+
+        Idle ->
             p [] [ text "Low value activity that wastes time and resources and may even cause harm." ]
 
 
-clock : Emphasis -> Int -> Emphasis -> Html Msg
-clock clockEmphasis time currentEmphasis =
+btn : Emphasis -> Emphasis -> Html Msg
+btn buttonEmphasis modelEmphasis =
     let
         isOn =
-            clockEmphasis == currentEmphasis
+            buttonEmphasis == modelEmphasis
     in
     button
-        [ classList [ ( "clock", True ), ( "clock-on", isOn ) ]
-        , Html.Events.onClick
+        [ classList [ ( "button", True ), ( "button-on", isOn ) ]
+        , onClick
             (if isOn then
                 Emphasize Idle
 
              else
-                Emphasize clockEmphasis
+                Emphasize buttonEmphasis
             )
         ]
-        [ div [ class "clock-icon" ] []
-        , div [ class "clock-time" ] [ text (millisToString time) ]
+        [ div [ class "button-icon" ] []
+        , div [ class "button-text" ] [ text (emphasisToString buttonEmphasis) ]
         ]
+
+
+
+-- clock : Emphasis -> Int -> Emphasis -> Html Msg
+-- clock clockEmphasis time currentEmphasis =
+--     let
+--         isOn =
+--             clockEmphasis == currentEmphasis
+--     in
+--     button
+--         [ classList [ ( "clock", True ), ( "clock-on", isOn ) ]
+--         , Html.Events.onClick
+--             (if isOn then
+--                 Emphasize Idle
+--
+--              else
+--                 Emphasize clockEmphasis
+--             )
+--         ]
+--         [ div [ class "clock-icon" ] []
+--         , div [ class "clock-time" ] [ text (millisToString time) ]
+--         ]
 
 
 millisToString : Int -> String
