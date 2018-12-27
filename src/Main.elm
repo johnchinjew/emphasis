@@ -171,62 +171,21 @@ title emphasis =
 
 description : Emphasis -> Html Msg
 description emphasis =
-    let
-        rest : List (Html Msg)
-        rest =
-            case emphasis of
-                Idle ->
-                    [ p [] [ text "This is ", b [] [ text "Emphasis" ], text ", a tool to help you live more intentionally by:" ]
-                    , ul []
-                        [ li [] [ text "showing you how you spend time" ]
-                        , li [] [ text "pushing you to fully engage the moment" ]
-                        , li [] [ text "encouraging you to live with balance" ]
-                        ]
-                    , p [] [ text "Every thing you do (from having lunch to writing a poem) falls within an ", i [] [ text "emphasis" ], text ". Tap on any emphasis below to begin." ]
-                    ]
+    case emphasis of
+        Idle ->
+            p [] [ text "Tap on an ", i [] [ text "emphasis" ], text " below to begin." ]
 
-                Critical ->
-                    [ p [] [ text "You're working on something ", b [] [ text "Critical" ], text ": important and time-sensitive work, requiring focus and effort. Keep going!" ]
-                    , p [] [ text "Examples:" ]
-                    , ul []
-                        [ li [] [ text "Your day job" ]
-                        , li [] [ text "Homework" ]
-                        , li [] [ text "Paying overdue bills" ]
-                        ]
-                    ]
+        Critical ->
+            p [] [ text "Important and time-sensitive tasks, requiring focus and effort." ]
 
-                Meaningful ->
-                    [ p [] [ text "You're doing something ", b [] [ text "Meaningful" ], text ": intrinsically valuable activity which yields long-term benefit for yourself and others, but is often regretfully neglected." ]
-                    , p [] [ text "Examples:" ]
-                    , ul []
-                        [ li [] [ text "Rest, play, exercise, meals" ]
-                        , li [] [ text "Investing in relationships" ]
-                        , li [] [ text "Journaling and reflection" ]
-                        , li [] [ text "Enjoying hobbies and pursuing goals" ]
-                        ]
-                    ]
+        Meaningful ->
+            p [] [ text "Regenerative activity which yields long-term benefit." ]
 
-                Interruptive ->
-                    [ p [] [ text "You're completing ", b [] [ text "Interruptive" ], text " tasks: somewhat helpful or necessary, but they can easily distract you from more important things. Try to finish these all at once in a batch." ]
-                    , p [] [ text "Examples:" ]
-                    , ul []
-                        [ li [] [ text "Reading emails" ]
-                        , li [] [ text "Checking notifications" ]
-                        , li [] [ text "Reorganizing desk" ]
-                        ]
-                    ]
+        Interruptive ->
+            p [] [ text "Helpful but interruptive activity that may distract." ]
 
-                Subtractive ->
-                    [ p [] [ text "Be careful, you're doing something ", b [] [ text "Subtractive" ], text ": low value activity that wastes time and resources and may even cause harm. These are things you'd like to do less or stop doing entirely." ]
-                    , p [] [ text "Examples:" ]
-                    , ul []
-                        [ li [] [ text "Excessive entertainment consumption" ]
-                        , li [] [ text "Excessive social media usage" ]
-                        , li [] [ text "Periods of idleness" ]
-                        ]
-                    ]
-    in
-    div [ class "description" ] rest
+        Subtractive ->
+            p [] [ text "Low value activity that wastes time and resources and may even cause harm." ]
 
 
 clock : Emphasis -> Int -> Emphasis -> Html Msg
