@@ -90,7 +90,7 @@ update msg model =
                     24 * 60 * 60 * 1000
             in
             ( { newModel | time = newTime }
-            , if List.sum [ model.critical, model.meaningful, model.interruptive, model.subtractive ] >= dayAsMillis - 1000 then
+            , if Time.posixToMillis newTime >= dayAsMillis then
                 Task.perform Reset Time.now
 
               else
