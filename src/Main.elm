@@ -41,7 +41,7 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model (Time.millisToPosix 0) 0 0 0 0 Idle
+    ( Model (Time.millisToPosix 0) 0 0 0 0 NoEmphasis
     , Task.perform Reset Time.now
     )
 
@@ -90,7 +90,8 @@ update msg model =
                     24 * 60 * 60 * 1000
             in
             ( { newModel | time = newTime }
-            , if Time.posixToMillis newTime >= dayAsMillis then
+              -- , if Time.posixToMillis newTime >= dayAsMillis then -- FIXME
+            , if False then
                 Task.perform Reset Time.now
 
               else
@@ -126,9 +127,15 @@ view model =
     , body =
         [ div [ class "app" ]
             [ h1 [ class "title" ] [ text titleText ]
+            , div [ class "clocks" ]
+                [ timer Focus model.focus
+                , timer Task model.task
+                , timer Rest model.rest
+                , timer Idle model.idle
+                ]
             , description model.emphasis
-            , div [ class "clocks-outer" ]
-                [ div [ class "clocks-inner" ]
+            , div [ class "buttons-outer" ]
+                [ div [ class "buttons-inner" ]
                     [ btn Focus model.emphasis
                     , btn Task model.emphasis
                     , btn Rest model.emphasis
@@ -174,6 +181,14 @@ title emphasis =
            )
 
 
+timer : Emphasis -> Int -> Html Msg
+timer emphasis time =
+    div [ class "clock" ]
+        [ p [ class "clock-label" ] [ text (emphasisToString emphasis) ]
+        , p [ class "clock-time" ] [ text (millisToString time) ]
+        ]
+
+
 description : Emphasis -> Html Msg
 description emphasis =
     case emphasis of
@@ -212,28 +227,6 @@ btn buttonEmphasis modelEmphasis =
         [ div [ class "button-icon" ] []
         , div [ class "button-text" ] [ text (emphasisToString buttonEmphasis) ]
         ]
-
-
-
--- clock : Emphasis -> Int -> Emphasis -> Html Msg
--- clock clockEmphasis time currentEmphasis =
---     let
---         isOn =
---             clockEmphasis == currentEmphasis
---     in
---     button
---         [ classList [ ( "clock", True ), ( "clock-on", isOn ) ]
---         , Html.Events.onClick
---             (if isOn then
---                 Emphasize Idle
---
---              else
---                 Emphasize clockEmphasis
---             )
---         ]
---         [ div [ class "clock-icon" ] []
---         , div [ class "clock-time" ] [ text (millisToString time) ]
---         ]
 
 
 millisToString : Int -> String
