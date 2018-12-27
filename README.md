@@ -1,2 +1,2 @@
-# emphasis
+# Emphasis
 Do with intent.

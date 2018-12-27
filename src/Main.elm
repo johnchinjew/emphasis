@@ -1,7 +1,7 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, b, button, div, i, li, p, text, ul)
+import Html exposing (Html, b, button, div, h1, i, li, p, text, ul)
 import Html.Attributes exposing (class, classList)
 import Html.Events
 import Task
@@ -118,10 +118,15 @@ subscriptions model =
 
 view : Model -> Browser.Document Msg
 view model =
-    { title = title model.emphasis
+    let
+        titleText =
+            title model.emphasis
+    in
+    { title = titleText
     , body =
         [ div [ class "app" ]
-            [ description model.emphasis
+            [ h1 [ class "title" ] [ text titleText ]
+            , description model.emphasis
             , div [ class "clocks-outer" ]
                 [ div [ class "clocks-inner" ]
                     [ clock Critical model.critical model.emphasis
@@ -272,18 +277,7 @@ millisToString time =
             ++ "h"
 
     else if minutes > 0 then
-        let
-            decimal =
-                floor ((toFloat seconds / 60) * 10)
-        in
-        String.fromInt minutes
-            ++ (if decimal > 0 then
-                    "." ++ String.fromInt decimal
-
-                else
-                    ""
-               )
-            ++ "m"
+        String.fromInt minutes ++ "m"
 
     else
         String.fromInt seconds ++ "s"
