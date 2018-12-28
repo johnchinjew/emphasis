@@ -16,7 +16,6 @@ html {
 
 body {
     margin: 0;
-    background: #E5E8E9;
 }
 
 
@@ -25,10 +24,55 @@ body {
 
 
 .app {
-    padding: 2rem;
-    font-size: 18px;
-    line-height: 1.5;
-    color: #313334;
+    max-width: 38rem;
+    margin: 0 auto;
+}
+
+
+/* TITLE */
+
+.title {
+    padding: 1rem 0;
+    text-align: center;
+}
+
+.title > h1 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+
+
+/* CLOCKS */
+
+
+.clocks {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+}
+
+.clock {
+    -webkit-box-flex: 1;
+        -ms-flex: 1;
+            flex: 1;
+    padding: 1rem;
+}
+
+.clock-label {
+    font-size: 14px;
+}
+
+.clock-time {
+    font-size: 36px;
+}
+
+.clock-unit {
+    font-size: 22px;
 }
 
 
@@ -37,33 +81,32 @@ body {
 
 
 .description {
-    max-width: 40rem;
-    margin: 0 auto;
-    margin-bottom: 190px; /* keep description visible */
-    padding-top: 0.75rem;
+    padding: 1rem;
+    font-size: 18px;
+    line-height: 1.5;
 }
 
-.description ul {
-    padding-left: 0;
+.description > p {
+    margin: 0;
 }
 
 
 
-/* CLOCK WRAPPERS */
+/* BUTTONS */
 
 
-.clocks-outer {
+.buttons-outer {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 0 2rem;
-    background: #E5E8E9;
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
 
-.clocks-inner {
+.buttons-inner {
     margin: 0 auto;
-    max-width: 28rem;
+    max-width: 26rem;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -71,79 +114,82 @@ body {
     -webkit-box-direction: normal;
         -ms-flex-direction: row;
             flex-direction: row;
-    -ms-flex-wrap: nowrap;
-        flex-wrap: nowrap;
     -webkit-box-pack: justify;
         -ms-flex-pack: justify;
             justify-content: space-between;
+    -webkit-box-align: end;
+        -ms-flex-align: end;
+            align-items: flex-end;
 }
 
-
-
-/* CLOCK BUTTONS */
-
-
-.clock {
+.button {
     font-family: inherit;
+    font-size: inherit;
+    color: inherit;
     border: 0;
     outline: 0;
     padding: 0;
-    background: none;
-    color: inherit;
-    font-size: inherit;
-    width: 4rem;
-    border-radius: 2rem 2rem 0 0;
+    border-radius: 34px 34px 0 0;
+    background-color: white;
+    -webkit-transition: padding 280ms, background-color 170ms;
+    transition: padding 280ms, background-color 170ms;
 }
 
-.clock:nth-of-type(1).clock-on { background: #c3fdff; }
-.clock:nth-of-type(2).clock-on { background: #d7ffd9; }
-.clock:nth-of-type(3).clock-on { background: #d1d9ff; }
-.clock:nth-of-type(4).clock-on { background: #ffcccb; }
+.button-on {
+    background-color: #C5DAFF;
+    padding-bottom: 12px;
+}
 
-
-
-/* CLOCK ICONS */
-
-
-.clock-icon {
-    margin-top: 1.2rem;
-    padding: 2rem 1rem;
+.button-icon {
+    margin-top: 0.5rem;
+    padding: 34px;
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 2rem;
+    background-size: 36px;
 }
 
-.clock:nth-of-type(1) > .clock-icon { background-image: url("/images/icons/flag.svg"); }
-.clock:nth-of-type(2) > .clock-icon { background-image: url("/images/icons/flower.svg"); }
-.clock:nth-of-type(3) > .clock-icon { background-image: url("/images/icons/checked.svg"); }
-.clock:nth-of-type(4) > .clock-icon { background-image: url("/images/icons/alert.svg"); }
+.button:nth-of-type(1) > .button-icon {
+    background-image: url("/images/icons/flag.svg");
+}
+
+.button:nth-of-type(2) > .button-icon {
+    background-image: url("/images/icons/flower.svg");
+}
+
+.button:nth-of-type(3) > .button-icon {
+    background-image: url("/images/icons/checked.svg");
+}
+
+.button:nth-of-type(4) > .button-icon {
+    background-image: url("/images/icons/alert.svg");
+}
 
 
-
-/* CLOCK TIME LABEL */
-
-
-.clock-time {
-    padding-top: 0.5rem;
-    padding-bottom: 3rem;
-    font-weight: bold;
+.button-label {
+    font-size: 14px;
+    padding: 1rem 0;
 }
 
 
 
-/* DESKTOP SIZE */
+/* DESKTOP */
 
 
-@media screen and (min-width: 44rem) {
-    .app {
-        font-size: 22px;
+@media screen and (min-width: 38rem) {
+    .clock {
+        -webkit-box-flex: 0;
+            -ms-flex-positive: 0;
+                flex-grow: 0;
     }
-
-    .clock-icon {
-        background-size: 2.25rem;
+    .clock-label {
+        font-size: 14px;
     }
 
     .clock-time {
-        padding-bottom: 4rem;
+        font-size: 48px;
+    }
+
+    .clock-unit {
+        font-size: 28px;
     }
 }

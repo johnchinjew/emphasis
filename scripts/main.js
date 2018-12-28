@@ -600,11 +600,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.P.C === region.V.C)
+	if (region.P.A === region.V.A)
 	{
-		return 'on line ' + region.P.C;
+		return 'on line ' + region.P.A;
 	}
-	return 'on lines ' + region.P.C + ' through ' + region.V.C;
+	return 'on lines ' + region.P.A + ' through ' + region.V.A;
 }
 
 
@@ -3969,7 +3969,7 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 		impl.aF,
 		impl.aD,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.E && impl.E(sendToApp)
+			var divertHrefToApp = impl.B && impl.B(sendToApp)
 			var view = impl.aH;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
@@ -4044,7 +4044,7 @@ function _Browser_application(impl)
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		E: function(sendToApp)
+		B: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4356,11 +4356,11 @@ function _Browser_load(url)
 		}
 	}));
 }
-var author$project$Main$Idle = 0;
 var author$project$Main$Model = F6(
-	function (time, critical, meaningful, interruptive, subtractive, emphasis) {
-		return {A: critical, g: emphasis, B: interruptive, D: meaningful, F: subtractive, R: time};
+	function (time, focus, task, rest, idle, emphasis) {
+		return {g: emphasis, G: focus, H: idle, I: rest, J: task, R: time};
 	});
+var author$project$Main$NoEmphasis = 0;
 var author$project$Main$Reset = function (a) {
 	return {$: 0, a: a};
 };
@@ -5417,10 +5417,6 @@ var elm$time$Time$every = F2(
 var author$project$Main$subscriptions = function (model) {
 	return A2(elm$time$Time$every, 1000, author$project$Main$Tick);
 };
-var elm$core$Basics$ge = _Utils_ge;
-var elm$core$List$sum = function (numbers) {
-	return A3(elm$core$List$foldl, elm$core$Basics$add, 0, numbers);
-};
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var elm$time$Time$posixToMillis = function (_n0) {
@@ -5446,19 +5442,19 @@ var author$project$Main$update = F2(
 						case 1:
 							return _Utils_update(
 								model,
-								{A: model.A + deltaMillis});
+								{G: model.G + deltaMillis});
 						case 2:
 							return _Utils_update(
 								model,
-								{D: model.D + deltaMillis});
+								{J: model.J + deltaMillis});
 						case 3:
 							return _Utils_update(
 								model,
-								{B: model.B + deltaMillis});
+								{I: model.I + deltaMillis});
 						default:
 							return _Utils_update(
 								model,
-								{F: model.F + deltaMillis});
+								{H: model.H + deltaMillis});
 					}
 				}();
 				var dayAsMillis = ((24 * 60) * 60) * 1000;
@@ -5466,11 +5462,7 @@ var author$project$Main$update = F2(
 					_Utils_update(
 						newModel,
 						{R: newTime}),
-					(_Utils_cmp(
-						elm$core$List$sum(
-							_List_fromArray(
-								[model.A, model.D, model.B, model.F])),
-						dayAsMillis - 1000) > -1) ? A2(elm$core$Task$perform, author$project$Main$Reset, elm$time$Time$now) : elm$core$Platform$Cmd$none);
+					false ? A2(elm$core$Task$perform, author$project$Main$Reset, elm$time$Time$now) : elm$core$Platform$Cmd$none);
 			default:
 				var newEmphasis = msg.a;
 				return _Utils_Tuple2(
@@ -5480,105 +5472,25 @@ var author$project$Main$update = F2(
 					elm$core$Platform$Cmd$none);
 		}
 	});
-var author$project$Main$Critical = 1;
-var author$project$Main$Interruptive = 3;
-var author$project$Main$Meaningful = 2;
-var author$project$Main$Subtractive = 4;
+var author$project$Main$Focus = 1;
+var author$project$Main$Idle = 4;
+var author$project$Main$Rest = 3;
+var author$project$Main$Task = 2;
 var author$project$Main$Emphasize = function (a) {
 	return {$: 2, a: a};
 };
-var elm$core$Basics$modBy = _Basics_modBy;
-var elm$time$Time$flooredDiv = F2(
-	function (numerator, denominator) {
-		return elm$core$Basics$floor(numerator / denominator);
-	});
-var elm$time$Time$toAdjustedMinutesHelp = F3(
-	function (defaultOffset, posixMinutes, eras) {
-		toAdjustedMinutesHelp:
-		while (true) {
-			if (!eras.b) {
-				return posixMinutes + defaultOffset;
-			} else {
-				var era = eras.a;
-				var olderEras = eras.b;
-				if (_Utils_cmp(era.P, posixMinutes) < 0) {
-					return posixMinutes + era.aa;
-				} else {
-					var $temp$defaultOffset = defaultOffset,
-						$temp$posixMinutes = posixMinutes,
-						$temp$eras = olderEras;
-					defaultOffset = $temp$defaultOffset;
-					posixMinutes = $temp$posixMinutes;
-					eras = $temp$eras;
-					continue toAdjustedMinutesHelp;
-				}
-			}
-		}
-	});
-var elm$time$Time$toAdjustedMinutes = F2(
-	function (_n0, time) {
-		var defaultOffset = _n0.a;
-		var eras = _n0.b;
-		return A3(
-			elm$time$Time$toAdjustedMinutesHelp,
-			defaultOffset,
-			A2(
-				elm$time$Time$flooredDiv,
-				elm$time$Time$posixToMillis(time),
-				60000),
-			eras);
-	});
-var elm$time$Time$toHour = F2(
-	function (zone, time) {
-		return A2(
-			elm$core$Basics$modBy,
-			24,
-			A2(
-				elm$time$Time$flooredDiv,
-				A2(elm$time$Time$toAdjustedMinutes, zone, time),
-				60));
-	});
-var elm$time$Time$toMinute = F2(
-	function (zone, time) {
-		return A2(
-			elm$core$Basics$modBy,
-			60,
-			A2(elm$time$Time$toAdjustedMinutes, zone, time));
-	});
-var elm$time$Time$toSecond = F2(
-	function (_n0, time) {
-		return A2(
-			elm$core$Basics$modBy,
-			60,
-			A2(
-				elm$time$Time$flooredDiv,
-				elm$time$Time$posixToMillis(time),
-				1000));
-	});
-var elm$time$Time$utc = A2(elm$time$Time$Zone, 0, _List_Nil);
-var author$project$Main$millisToString = function (time) {
-	var seconds = A2(
-		elm$time$Time$toSecond,
-		elm$time$Time$utc,
-		elm$time$Time$millisToPosix(time));
-	var minutes = A2(
-		elm$time$Time$toMinute,
-		elm$time$Time$utc,
-		elm$time$Time$millisToPosix(time));
-	var hours = A2(
-		elm$time$Time$toHour,
-		elm$time$Time$utc,
-		elm$time$Time$millisToPosix(time));
-	if (hours > 0) {
-		var decimal = elm$core$Basics$floor((minutes / 60) * 10);
-		return elm$core$String$fromInt(hours) + (((decimal > 0) ? ('.' + elm$core$String$fromInt(decimal)) : '') + 'h');
-	} else {
-		if (minutes > 0) {
-			var decimal = elm$core$Basics$floor((seconds / 60) * 10);
-			return elm$core$String$fromInt(minutes) + (((decimal > 0) ? ('.' + elm$core$String$fromInt(decimal)) : '') + 'm');
-		} else {
-			return elm$core$String$fromInt(seconds) + 's';
-		}
+var author$project$Main$emphasisToString = function (emphasis) {
+	switch (emphasis) {
+		case 0:
+			return '';
+		case 1:
+			return 'Focus';
+		case 2:
+			return 'Task';
+		case 3:
+			return 'Rest';
+		default:
+			return 'Idle';
 	}
 };
 var elm$json$Json$Decode$map = _Json_map1;
@@ -5651,9 +5563,9 @@ var elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		elm$json$Json$Decode$succeed(msg));
 };
-var author$project$Main$clock = F3(
-	function (clockEmphasis, time, currentEmphasis) {
-		var isOn = _Utils_eq(clockEmphasis, currentEmphasis);
+var author$project$Main$btn = F2(
+	function (buttonEmphasis, modelEmphasis) {
+		var isOn = _Utils_eq(buttonEmphasis, modelEmphasis);
 		return A2(
 			elm$html$Html$button,
 			_List_fromArray(
@@ -5661,11 +5573,11 @@ var author$project$Main$clock = F3(
 					elm$html$Html$Attributes$classList(
 					_List_fromArray(
 						[
-							_Utils_Tuple2('clock', true),
-							_Utils_Tuple2('clock-on', isOn)
+							_Utils_Tuple2('button', true),
+							_Utils_Tuple2('button-on', isOn)
 						])),
 					elm$html$Html$Events$onClick(
-					isOn ? author$project$Main$Emphasize(0) : author$project$Main$Emphasize(clockEmphasis))
+					isOn ? author$project$Main$Emphasize(0) : author$project$Main$Emphasize(buttonEmphasis))
 				]),
 			_List_fromArray(
 				[
@@ -5673,356 +5585,329 @@ var author$project$Main$clock = F3(
 					elm$html$Html$div,
 					_List_fromArray(
 						[
-							elm$html$Html$Attributes$class('clock-icon')
+							elm$html$Html$Attributes$class('button-icon')
 						]),
 					_List_Nil),
 					A2(
 					elm$html$Html$div,
 					_List_fromArray(
 						[
-							elm$html$Html$Attributes$class('clock-time')
+							elm$html$Html$Attributes$class('button-label')
 						]),
 					_List_fromArray(
 						[
 							elm$html$Html$text(
-							author$project$Main$millisToString(time))
+							author$project$Main$emphasisToString(buttonEmphasis))
 						]))
 				]));
 	});
-var elm$html$Html$b = _VirtualDom_node('b');
-var elm$html$Html$i = _VirtualDom_node('i');
-var elm$html$Html$li = _VirtualDom_node('li');
-var elm$html$Html$p = _VirtualDom_node('p');
-var elm$html$Html$ul = _VirtualDom_node('ul');
-var author$project$Main$description = function (emphasis) {
-	var rest = function () {
-		switch (emphasis) {
-			case 0:
-				return _List_fromArray(
-					[
-						A2(
-						elm$html$Html$p,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text('This is '),
-								A2(
-								elm$html$Html$b,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('Emphasis')
-									])),
-								elm$html$Html$text(', a tool to help you live more intentionally by:')
-							])),
-						A2(
-						elm$html$Html$ul,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$li,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('showing you how you spend time')
-									])),
-								A2(
-								elm$html$Html$li,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('pushing you to fully engage the moment')
-									])),
-								A2(
-								elm$html$Html$li,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('encouraging you to live with balance')
-									]))
-							])),
-						A2(
-						elm$html$Html$p,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text('Every thing you do (from having lunch to writing a poem) falls within an '),
-								A2(
-								elm$html$Html$i,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('emphasis')
-									])),
-								elm$html$Html$text('. Tap on any emphasis below to begin.')
-							]))
-					]);
-			case 1:
-				return _List_fromArray(
-					[
-						A2(
-						elm$html$Html$p,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text('You\'re working on something '),
-								A2(
-								elm$html$Html$b,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('Critical')
-									])),
-								elm$html$Html$text(': important and time-sensitive work, requiring focus and effort. Keep going!')
-							])),
-						A2(
-						elm$html$Html$p,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text('Examples:')
-							])),
-						A2(
-						elm$html$Html$ul,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$li,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('Your day job')
-									])),
-								A2(
-								elm$html$Html$li,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('Homework')
-									])),
-								A2(
-								elm$html$Html$li,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('Paying overdue bills')
-									]))
-							]))
-					]);
-			case 2:
-				return _List_fromArray(
-					[
-						A2(
-						elm$html$Html$p,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text('You\'re doing something '),
-								A2(
-								elm$html$Html$b,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('Meaningful')
-									])),
-								elm$html$Html$text(': intrinsically valuable activity which yields long-term benefit for yourself and others, but is often regretfully neglected.')
-							])),
-						A2(
-						elm$html$Html$p,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text('Examples:')
-							])),
-						A2(
-						elm$html$Html$ul,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$li,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('Rest, play, exercise, meals')
-									])),
-								A2(
-								elm$html$Html$li,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('Investing in relationships')
-									])),
-								A2(
-								elm$html$Html$li,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('Journaling and reflection')
-									])),
-								A2(
-								elm$html$Html$li,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('Enjoying hobbies and pursuing goals')
-									]))
-							]))
-					]);
-			case 3:
-				return _List_fromArray(
-					[
-						A2(
-						elm$html$Html$p,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text('You\'re completing '),
-								A2(
-								elm$html$Html$b,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('Interruptive')
-									])),
-								elm$html$Html$text(' tasks: somewhat helpful or necessary, but they can easily distract you from more important things. Try to finish these all at once in a batch.')
-							])),
-						A2(
-						elm$html$Html$p,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text('Examples:')
-							])),
-						A2(
-						elm$html$Html$ul,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$li,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('Reading emails')
-									])),
-								A2(
-								elm$html$Html$li,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('Checking notifications')
-									])),
-								A2(
-								elm$html$Html$li,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('Reorganizing desk')
-									]))
-							]))
-					]);
-			default:
-				return _List_fromArray(
-					[
-						A2(
-						elm$html$Html$p,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text('Be careful, you\'re doing something '),
-								A2(
-								elm$html$Html$b,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('Subtractive')
-									])),
-								elm$html$Html$text(': low value activity that wastes time and resources and may even cause harm. These are things you\'d like to do less or stop doing entirely.')
-							])),
-						A2(
-						elm$html$Html$p,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text('Examples:')
-							])),
-						A2(
-						elm$html$Html$ul,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$li,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('Excessive entertainment consumption')
-									])),
-								A2(
-								elm$html$Html$li,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('Excessive social media usage')
-									])),
-								A2(
-								elm$html$Html$li,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('Periods of idleness')
-									]))
-							]))
-					]);
+var elm$html$Html$span = _VirtualDom_node('span');
+var elm$core$Basics$modBy = _Basics_modBy;
+var elm$time$Time$flooredDiv = F2(
+	function (numerator, denominator) {
+		return elm$core$Basics$floor(numerator / denominator);
+	});
+var elm$time$Time$toAdjustedMinutesHelp = F3(
+	function (defaultOffset, posixMinutes, eras) {
+		toAdjustedMinutesHelp:
+		while (true) {
+			if (!eras.b) {
+				return posixMinutes + defaultOffset;
+			} else {
+				var era = eras.a;
+				var olderEras = eras.b;
+				if (_Utils_cmp(era.P, posixMinutes) < 0) {
+					return posixMinutes + era.aa;
+				} else {
+					var $temp$defaultOffset = defaultOffset,
+						$temp$posixMinutes = posixMinutes,
+						$temp$eras = olderEras;
+					defaultOffset = $temp$defaultOffset;
+					posixMinutes = $temp$posixMinutes;
+					eras = $temp$eras;
+					continue toAdjustedMinutesHelp;
+				}
+			}
 		}
-	}();
-	return A2(
-		elm$html$Html$div,
-		_List_fromArray(
+	});
+var elm$time$Time$toAdjustedMinutes = F2(
+	function (_n0, time) {
+		var defaultOffset = _n0.a;
+		var eras = _n0.b;
+		return A3(
+			elm$time$Time$toAdjustedMinutesHelp,
+			defaultOffset,
+			A2(
+				elm$time$Time$flooredDiv,
+				elm$time$Time$posixToMillis(time),
+				60000),
+			eras);
+	});
+var elm$time$Time$toHour = F2(
+	function (zone, time) {
+		return A2(
+			elm$core$Basics$modBy,
+			24,
+			A2(
+				elm$time$Time$flooredDiv,
+				A2(elm$time$Time$toAdjustedMinutes, zone, time),
+				60));
+	});
+var elm$time$Time$toMinute = F2(
+	function (zone, time) {
+		return A2(
+			elm$core$Basics$modBy,
+			60,
+			A2(elm$time$Time$toAdjustedMinutes, zone, time));
+	});
+var elm$time$Time$toSecond = F2(
+	function (_n0, time) {
+		return A2(
+			elm$core$Basics$modBy,
+			60,
+			A2(
+				elm$time$Time$flooredDiv,
+				elm$time$Time$posixToMillis(time),
+				1000));
+	});
+var elm$time$Time$utc = A2(elm$time$Time$Zone, 0, _List_Nil);
+var author$project$Main$millisToHtml = function (time) {
+	var seconds = A2(
+		elm$time$Time$toSecond,
+		elm$time$Time$utc,
+		elm$time$Time$millisToPosix(time));
+	var minutes = A2(
+		elm$time$Time$toMinute,
+		elm$time$Time$utc,
+		elm$time$Time$millisToPosix(time));
+	var hours = A2(
+		elm$time$Time$toHour,
+		elm$time$Time$utc,
+		elm$time$Time$millisToPosix(time));
+	if (hours > 0) {
+		var decimal = elm$core$Basics$floor((minutes / 60) * 10);
+		return _List_fromArray(
 			[
-				elm$html$Html$Attributes$class('description')
-			]),
-		rest);
+				A2(
+				elm$html$Html$span,
+				_List_Nil,
+				_List_fromArray(
+					[
+						elm$html$Html$text(
+						_Utils_ap(
+							elm$core$String$fromInt(hours),
+							(decimal > 0) ? ('.' + elm$core$String$fromInt(decimal)) : ''))
+					])),
+				A2(
+				elm$html$Html$span,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('clock-unit')
+					]),
+				_List_fromArray(
+					[
+						elm$html$Html$text('h')
+					]))
+			]);
+	} else {
+		if (minutes > 0) {
+			return _List_fromArray(
+				[
+					A2(
+					elm$html$Html$span,
+					_List_Nil,
+					_List_fromArray(
+						[
+							elm$html$Html$text(
+							elm$core$String$fromInt(minutes))
+						])),
+					A2(
+					elm$html$Html$span,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('clock-unit')
+						]),
+					_List_fromArray(
+						[
+							elm$html$Html$text('m')
+						]))
+				]);
+		} else {
+			return _List_fromArray(
+				[
+					A2(
+					elm$html$Html$span,
+					_List_Nil,
+					_List_fromArray(
+						[
+							elm$html$Html$text(
+							elm$core$String$fromInt(seconds))
+						])),
+					A2(
+					elm$html$Html$span,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('clock-unit')
+						]),
+					_List_fromArray(
+						[
+							elm$html$Html$text('s')
+						]))
+				]);
+		}
+	}
+};
+var author$project$Main$clock = F2(
+	function (emphasis, time) {
+		return A2(
+			elm$html$Html$div,
+			_List_fromArray(
+				[
+					elm$html$Html$Attributes$class('clock')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					elm$html$Html$div,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('clock-label')
+						]),
+					_List_fromArray(
+						[
+							elm$html$Html$text(
+							author$project$Main$emphasisToString(emphasis))
+						])),
+					A2(
+					elm$html$Html$div,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('clock-time')
+						]),
+					author$project$Main$millisToHtml(time))
+				]));
+	});
+var elm$html$Html$i = _VirtualDom_node('i');
+var elm$html$Html$p = _VirtualDom_node('p');
+var author$project$Main$description = function (emphasis) {
+	switch (emphasis) {
+		case 0:
+			return A2(
+				elm$html$Html$p,
+				_List_Nil,
+				_List_fromArray(
+					[
+						elm$html$Html$text('Tap on an '),
+						A2(
+						elm$html$Html$i,
+						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$text('emphasis')
+							])),
+						elm$html$Html$text(' below to begin recording how you use time.')
+					]));
+		case 1:
+			return A2(
+				elm$html$Html$p,
+				_List_Nil,
+				_List_fromArray(
+					[
+						elm$html$Html$text('Important and time-sensitive activity, requiring attention and effort.')
+					]));
+		case 2:
+			return A2(
+				elm$html$Html$p,
+				_List_Nil,
+				_List_fromArray(
+					[
+						elm$html$Html$text('Somewhat helpful, but often interruptive or distracting activity.')
+					]));
+		case 3:
+			return A2(
+				elm$html$Html$p,
+				_List_Nil,
+				_List_fromArray(
+					[
+						elm$html$Html$text('Regenerative activity which yields long-term benefit.')
+					]));
+		default:
+			return A2(
+				elm$html$Html$p,
+				_List_Nil,
+				_List_fromArray(
+					[
+						elm$html$Html$text('Low value activity that wastes time and resources and may even cause harm.')
+					]));
+	}
 };
 var elm$core$Basics$neq = _Utils_notEqual;
 var author$project$Main$title = function (emphasis) {
-	var subtitle = function () {
-		switch (emphasis) {
-			case 0:
-				return '';
-			case 1:
-				return 'Critical';
-			case 2:
-				return 'Meaningful';
-			case 3:
-				return 'Interruptive';
-			default:
-				return 'Subtractive';
-		}
-	}();
+	var subtitle = author$project$Main$emphasisToString(emphasis);
 	return 'Emphasis' + ((subtitle !== '') ? (' • ' + subtitle) : '');
 };
+var elm$html$Html$footer = _VirtualDom_node('footer');
+var elm$html$Html$h1 = _VirtualDom_node('h1');
+var elm$html$Html$header = _VirtualDom_node('header');
+var elm$html$Html$main_ = _VirtualDom_node('main');
+var elm$html$Html$section = _VirtualDom_node('section');
 var author$project$Main$view = function (model) {
+	var titleText = author$project$Main$title(model.g);
 	return {
 		aq: _List_fromArray(
 			[
 				A2(
-				elm$html$Html$div,
+				elm$html$Html$main_,
 				_List_fromArray(
 					[
 						elm$html$Html$Attributes$class('app')
 					]),
 				_List_fromArray(
 					[
-						author$project$Main$description(model.g),
 						A2(
-						elm$html$Html$div,
+						elm$html$Html$header,
 						_List_fromArray(
 							[
-								elm$html$Html$Attributes$class('clocks-outer')
+								elm$html$Html$Attributes$class('title')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$h1,
+								_List_Nil,
+								_List_fromArray(
+									[
+										elm$html$Html$text(titleText)
+									]))
+							])),
+						A2(
+						elm$html$Html$section,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('clocks')
+							]),
+						_List_fromArray(
+							[
+								A2(author$project$Main$clock, 1, model.G),
+								A2(author$project$Main$clock, 2, model.J),
+								A2(author$project$Main$clock, 3, model.I),
+								A2(author$project$Main$clock, 4, model.H)
+							])),
+						A2(
+						elm$html$Html$section,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('description')
+							]),
+						_List_fromArray(
+							[
+								author$project$Main$description(model.g)
+							])),
+						A2(
+						elm$html$Html$footer,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('buttons-outer')
 							]),
 						_List_fromArray(
 							[
@@ -6030,19 +5915,19 @@ var author$project$Main$view = function (model) {
 								elm$html$Html$div,
 								_List_fromArray(
 									[
-										elm$html$Html$Attributes$class('clocks-inner')
+										elm$html$Html$Attributes$class('buttons-inner')
 									]),
 								_List_fromArray(
 									[
-										A3(author$project$Main$clock, 1, model.A, model.g),
-										A3(author$project$Main$clock, 2, model.D, model.g),
-										A3(author$project$Main$clock, 3, model.B, model.g),
-										A3(author$project$Main$clock, 4, model.F, model.g)
+										A2(author$project$Main$btn, 1, model.g),
+										A2(author$project$Main$btn, 2, model.g),
+										A2(author$project$Main$btn, 3, model.g),
+										A2(author$project$Main$btn, 4, model.g)
 									]))
 							]))
 					]))
 			]),
-		aE: author$project$Main$title(model.g)
+		aE: titleText
 	};
 };
 var elm$browser$Browser$External = function (a) {

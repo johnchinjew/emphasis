@@ -1,7 +1,7 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, b, button, div, h1, i, li, p, text, ul)
+import Html exposing (..)
 import Html.Attributes exposing (class, classList)
 import Html.Events exposing (onClick)
 import Task
@@ -125,16 +125,17 @@ view model =
     in
     { title = titleText
     , body =
-        [ div [ class "app" ]
-            [ h1 [ class "title" ] [ text titleText ]
-            , div [ class "clocks" ]
-                [ timer Focus model.focus
-                , timer Task model.task
-                , timer Rest model.rest
-                , timer Idle model.idle
+        [ main_ [ class "app" ]
+            [ header [ class "title" ]
+                [ h1 [] [ text titleText ] ]
+            , section [ class "clocks" ]
+                [ clock Focus model.focus
+                , clock Task model.task
+                , clock Rest model.rest
+                , clock Idle model.idle
                 ]
-            , description model.emphasis
-            , div [ class "buttons-outer" ]
+            , section [ class "description" ] [ description model.emphasis ]
+            , footer [ class "buttons-outer" ]
                 [ div [ class "buttons-inner" ]
                     [ btn Focus model.emphasis
                     , btn Task model.emphasis
@@ -181,11 +182,11 @@ title emphasis =
            )
 
 
-timer : Emphasis -> Int -> Html Msg
-timer emphasis time =
+clock : Emphasis -> Int -> Html Msg
+clock emphasis time =
     div [ class "clock" ]
-        [ p [ class "clock-label" ] [ text (emphasisToString emphasis) ]
-        , p [ class "clock-time" ] [ text (millisToString time) ]
+        [ div [ class "clock-label" ] [ text (emphasisToString emphasis) ]
+        , div [ class "clock-time" ] (millisToHtml time)
         ]
 
 
@@ -193,13 +194,13 @@ description : Emphasis -> Html Msg
 description emphasis =
     case emphasis of
         NoEmphasis ->
-            p [] [ text "Tap on an ", i [] [ text "emphasis" ], text " below to begin." ]
+            p [] [ text "Tap on an ", i [] [ text "emphasis" ], text " below to begin recording how you use time." ]
 
         Focus ->
-            p [] [ text "Important and time-sensitive tasks, requiring focus and effort." ]
+            p [] [ text "Important and time-sensitive activity, requiring attention and effort." ]
 
         Task ->
-            p [] [ text "Helpful but interruptive activity that may distract." ]
+            p [] [ text "Somewhat helpful, but often interruptive or distracting activity." ]
 
         Rest ->
             p [] [ text "Regenerative activity which yields long-term benefit." ]
@@ -218,14 +219,14 @@ btn buttonEmphasis modelEmphasis =
         [ classList [ ( "button", True ), ( "button-on", isOn ) ]
         , onClick
             (if isOn then
-                Emphasize Idle
+                Emphasize NoEmphasis
 
              else
                 Emphasize buttonEmphasis
             )
         ]
         [ div [ class "button-icon" ] []
-        , div [ class "button-text" ] [ text (emphasisToString buttonEmphasis) ]
+        , div [ class "button-label" ] [ text (emphasisToString buttonEmphasis) ]
         ]
 
 
@@ -260,3 +261,45 @@ millisToString time =
 
     else
         String.fromInt seconds ++ "s"
+
+
+millisToHtml : Int -> List (Html Msg)
+millisToHtml time =
+    let
+        hours =
+            Time.toHour Time.utc (Time.millisToPosix time)
+
+        minutes =
+            Time.toMinute Time.utc (Time.millisToPosix time)
+
+        seconds =
+            Time.toSecond Time.utc (Time.millisToPosix time)
+    in
+    if hours > 0 then
+        let
+            decimal =
+                floor ((toFloat minutes / 60) * 10)
+        in
+        [ span []
+            [ text
+                (String.fromInt hours
+                    ++ (if decimal > 0 then
+                            "." ++ String.fromInt decimal
+
+                        else
+                            ""
+                       )
+                )
+            ]
+        , span [ class "clock-unit" ] [ text "h" ]
+        ]
+
+    else if minutes > 0 then
+        [ span [] [ text (String.fromInt minutes) ]
+        , span [ class "clock-unit" ] [ text "m" ]
+        ]
+
+    else
+        [ span [] [ text (String.fromInt seconds) ]
+        , span [ class "clock-unit" ] [ text "s" ]
+        ]
