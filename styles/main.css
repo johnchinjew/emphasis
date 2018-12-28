@@ -24,8 +24,12 @@ body {
 
 
 .app {
-    max-width: 46rem;
+    max-width: 44rem;
     margin: 0 auto;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
 }
 
 
@@ -179,10 +183,10 @@ body {
 
 @media screen and (min-width: 36rem) {
     .clock-time {
-        font-size: 64px;
+        font-size: 52px;
     }
 
     .clock-unit {
-        font-size: 36px;
+        font-size: 30px;
     }
 }
