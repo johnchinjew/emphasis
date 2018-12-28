@@ -4357,8 +4357,8 @@ function _Browser_load(url)
 	}));
 }
 var author$project$Main$Model = F6(
-	function (time, focus, task, rest, idle, emphasis) {
-		return {g: emphasis, G: focus, H: idle, I: rest, J: task, R: time};
+	function (time, focus, task, rest, _void, emphasis) {
+		return {g: emphasis, G: focus, H: rest, I: task, R: time, J: _void};
 	});
 var author$project$Main$NoEmphasis = 0;
 var author$project$Main$Reset = function (a) {
@@ -5446,15 +5446,15 @@ var author$project$Main$update = F2(
 						case 2:
 							return _Utils_update(
 								model,
-								{J: model.J + deltaMillis});
+								{I: model.I + deltaMillis});
 						case 3:
 							return _Utils_update(
 								model,
-								{I: model.I + deltaMillis});
+								{H: model.H + deltaMillis});
 						default:
 							return _Utils_update(
 								model,
-								{H: model.H + deltaMillis});
+								{J: model.J + deltaMillis});
 					}
 				}();
 				var dayAsMillis = ((24 * 60) * 60) * 1000;
@@ -5473,9 +5473,9 @@ var author$project$Main$update = F2(
 		}
 	});
 var author$project$Main$Focus = 1;
-var author$project$Main$Idle = 4;
 var author$project$Main$Rest = 3;
 var author$project$Main$Task = 2;
+var author$project$Main$Void = 4;
 var author$project$Main$Emphasize = function (a) {
 	return {$: 2, a: a};
 };
@@ -5490,7 +5490,7 @@ var author$project$Main$emphasisToString = function (emphasis) {
 		case 3:
 			return 'Rest';
 		default:
-			return 'Idle';
+			return 'Void';
 	}
 };
 var elm$json$Json$Decode$map = _Json_map1;
@@ -5889,9 +5889,9 @@ var author$project$Main$view = function (model) {
 						_List_fromArray(
 							[
 								A2(author$project$Main$clock, 1, model.G),
-								A2(author$project$Main$clock, 2, model.J),
-								A2(author$project$Main$clock, 3, model.I),
-								A2(author$project$Main$clock, 4, model.H)
+								A2(author$project$Main$clock, 2, model.I),
+								A2(author$project$Main$clock, 3, model.H),
+								A2(author$project$Main$clock, 4, model.J)
 							])),
 						A2(
 						elm$html$Html$section,

@@ -26,7 +26,7 @@ type Emphasis
     | Focus
     | Task
     | Rest
-    | Idle
+    | Void
 
 
 type alias Model =
@@ -34,7 +34,7 @@ type alias Model =
     , focus : Int
     , task : Int
     , rest : Int
-    , idle : Int
+    , void : Int
     , emphasis : Emphasis
     }
 
@@ -83,8 +83,8 @@ update msg model =
                         Rest ->
                             { model | rest = model.rest + deltaMillis }
 
-                        Idle ->
-                            { model | idle = model.idle + deltaMillis }
+                        Void ->
+                            { model | void = model.void + deltaMillis }
 
                 dayAsMillis =
                     24 * 60 * 60 * 1000
@@ -132,7 +132,7 @@ view model =
                 [ clock Focus model.focus
                 , clock Task model.task
                 , clock Rest model.rest
-                , clock Idle model.idle
+                , clock Void model.void
                 ]
             , section [ class "description" ] [ description model.emphasis ]
             , footer [ class "buttons-outer" ]
@@ -140,7 +140,7 @@ view model =
                     [ btn Focus model.emphasis
                     , btn Task model.emphasis
                     , btn Rest model.emphasis
-                    , btn Idle model.emphasis
+                    , btn Void model.emphasis
                     ]
                 ]
             ]
@@ -163,8 +163,8 @@ emphasisToString emphasis =
         Rest ->
             "Rest"
 
-        Idle ->
-            "Idle"
+        Void ->
+            "Void"
 
 
 title : Emphasis -> String
@@ -205,7 +205,7 @@ description emphasis =
         Rest ->
             p [] [ text "Regenerative activity which yields long-term benefit." ]
 
-        Idle ->
+        Void ->
             p [] [ text "Low value activity that wastes time and resources and may even cause harm." ]
 
 

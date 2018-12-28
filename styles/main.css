@@ -145,23 +145,26 @@ body {
     padding: 34px;
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 36px;
 }
 
 .button:nth-of-type(1) > .button-icon {
-    background-image: url("/images/icons/flag.svg");
+    background-image: url("/images/icons/eye.svg");
+    background-size: 38px;
 }
 
 .button:nth-of-type(2) > .button-icon {
-    background-image: url("/images/icons/flower.svg");
+    background-image: url("/images/icons/check.svg");
+    background-size: 34px;
 }
 
 .button:nth-of-type(3) > .button-icon {
-    background-image: url("/images/icons/checked.svg");
+    background-image: url("/images/icons/human.svg");
+    background-size: 38px;
 }
 
 .button:nth-of-type(4) > .button-icon {
     background-image: url("/images/icons/alert.svg");
+    background-size: 36px;
 }
 
 
