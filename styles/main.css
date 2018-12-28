@@ -11,7 +11,7 @@
 html {
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
-    font-family: -apple-system, system-ui, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    font-family: -apple-system, system-ui, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, Roboto, sans-serif;
 }
 
 body {
@@ -136,7 +136,7 @@ body {
 }
 
 .button-on {
-    background-color: #C5DAFF;
+    background-color: #F0F0F0;
     padding-bottom: 12px;
 }
 
@@ -179,11 +179,6 @@ body {
 
 
 @media screen and (min-width: 38rem) {
-    .clock {
-        -webkit-box-flex: 0;
-            -ms-flex-positive: 0;
-                flex-grow: 0;
-    }
     .clock-label {
         font-size: 14px;
     }
