@@ -24,7 +24,7 @@ body {
 
 
 .app {
-    max-width: 38rem;
+    max-width: 46rem;
     margin: 0 auto;
 }
 
@@ -175,19 +175,14 @@ body {
 
 
 
-/* DESKTOP */
+/* SCREENS */
 
-
-@media screen and (min-width: 38rem) {
-    .clock-label {
-        font-size: 14px;
-    }
-
+@media screen and (min-width: 36rem) {
     .clock-time {
-        font-size: 48px;
+        font-size: 64px;
     }
 
     .clock-unit {
-        font-size: 28px;
+        font-size: 36px;
     }
 }
