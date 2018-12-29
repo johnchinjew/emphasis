@@ -90,8 +90,7 @@ update msg model =
                     24 * 60 * 60 * 1000
             in
             ( { newModel | time = newTime }
-              -- , if Time.posixToMillis newTime >= dayAsMillis then -- FIXME
-            , if False then
+            , if posixDays newTime >= posixDays model.time then
                 Task.perform Reset Time.now
 
               else
@@ -102,6 +101,15 @@ update msg model =
             ( { model | emphasis = newEmphasis }
             , Cmd.none
             )
+
+
+posixDays : Time.Posix -> Int
+posixDays time =
+    let
+        millisInDay =
+            86400000
+    in
+    Time.posixToMillis time // millisInDay
 
 
 
@@ -148,25 +156,6 @@ view model =
     }
 
 
-emphasisToString : Emphasis -> String
-emphasisToString emphasis =
-    case emphasis of
-        NoEmphasis ->
-            ""
-
-        Focus ->
-            "Focus"
-
-        Task ->
-            "Task"
-
-        Rest ->
-            "Rest"
-
-        Void ->
-            "Void"
-
-
 title : Emphasis -> String
 title emphasis =
     let
@@ -180,6 +169,14 @@ title emphasis =
             else
                 ""
            )
+
+
+clock : Emphasis -> Int -> Html Msg
+clock emphasis time =
+    div [ class "clock" ]
+        [ div [ class "clock-label" ] [ text (emphasisToString emphasis) ]
+        , div [ class "clock-time" ] (clockTime time)
+        ]
 
 
 clockTime : Int -> List (Html Msg)
@@ -224,14 +221,6 @@ clockTime time =
         ]
 
 
-clock : Emphasis -> Int -> Html Msg
-clock emphasis time =
-    div [ class "clock" ]
-        [ div [ class "clock-label" ] [ text (emphasisToString emphasis) ]
-        , div [ class "clock-time" ] (clockTime time)
-        ]
-
-
 description : Emphasis -> List (Html Msg)
 description emphasis =
     case emphasis of
@@ -239,16 +228,41 @@ description emphasis =
             [ p [] [ text "Tap on an ", i [] [ text "emphasis" ], text " below to begin recording how you use time." ] ]
 
         Focus ->
-            [ p [] [ text "Important and time-sensitive activity, requiring attention and effort." ] ]
+            [ p [] [ text "Important, meaningful, or time-sensitive work, requiring attention and effort." ]
+            , ul []
+                [ li [] [ text "An occupation" ]
+                , li [] [ text "Studying for school" ]
+                , li [] [ text "Paying overdue bills" ]
+                ]
+            ]
 
         Task ->
-            [ p [] [ text "Somewhat helpful, but often interruptive or distracting activity." ] ]
+            [ p [] [ text "Though beneficial or necessary, these tasks easily splinter attention and interrupt more significant activity." ]
+            , ul []
+                [ li [] [ text "Reviewing emails or notifications" ]
+                , li [] [ text "Reorganizing a desk" ]
+                , li [] [ text "Reading the news" ]
+                ]
+            , p [] [ text "Try to finish these all at once in a batch." ]
+            ]
 
         Rest ->
-            [ p [] [ text "Regenerative activity which yields long-term benefit." ] ]
+            [ p [] [ text "Regenerative activity which yields long-term benefit for yourself and others, but is often neglected." ]
+            , ul []
+                [ li [] [ text "Rest, play, exercise, hobbies, meals" ]
+                , li [] [ text "Socializing and investing in relationships" ]
+                , li [] [ text "Reflection and journaling" ]
+                ]
+            ]
 
         Void ->
-            [ p [] [ text "Low value activity that wastes time and resources and may even cause harm." ] ]
+            [ p [] [ text "Low value activity that wastes time and resources and may even cause harm." ]
+            , ul []
+                [ li [] [ text "Procrastination and idleness" ]
+                , li [] [ text "Excessive social media usage" ]
+                , li [] [ text "Binge entertainment consumption" ]
+                ]
+            ]
 
 
 button_ : Emphasis -> Emphasis -> Html Msg
@@ -270,3 +284,22 @@ button_ buttonEmphasis modelEmphasis =
         [ div [ class "button-icon" ] []
         , div [ class "button-label" ] [ text (emphasisToString buttonEmphasis) ]
         ]
+
+
+emphasisToString : Emphasis -> String
+emphasisToString emphasis =
+    case emphasis of
+        NoEmphasis ->
+            ""
+
+        Focus ->
+            "Focus"
+
+        Task ->
+            "Task"
+
+        Rest ->
+            "Rest"
+
+        Void ->
+            "Void"

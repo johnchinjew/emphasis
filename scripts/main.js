@@ -600,11 +600,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.P.A === region.V.A)
+	if (region.Q.A === region.V.A)
 	{
-		return 'on line ' + region.P.A;
+		return 'on line ' + region.Q.A;
 	}
-	return 'on lines ' + region.P.A + ' through ' + region.V.A;
+	return 'on lines ' + region.Q.A + ' through ' + region.V.A;
 }
 
 
@@ -2706,8 +2706,8 @@ var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
 		l: func(record.l),
-		Q: record.Q,
-		O: record.O
+		R: record.R,
+		P: record.P
 	}
 });
 
@@ -2976,10 +2976,10 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 
 		var value = result.a;
 		var message = !tag ? value : tag < 3 ? value.a : value.l;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.Q;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.R;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.O) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.P) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -4235,8 +4235,8 @@ function _Browser_getViewport()
 	return {
 		ak: _Browser_getScene(),
 		an: {
-			K: _Browser_window.pageXOffset,
-			L: _Browser_window.pageYOffset,
+			L: _Browser_window.pageXOffset,
+			M: _Browser_window.pageYOffset,
 			y: _Browser_doc.documentElement.clientWidth,
 			t: _Browser_doc.documentElement.clientHeight
 		}
@@ -4277,8 +4277,8 @@ function _Browser_getViewportOf(id)
 				t: node.scrollHeight
 			},
 			an: {
-				K: node.scrollLeft,
-				L: node.scrollTop,
+				L: node.scrollLeft,
+				M: node.scrollTop,
 				y: node.clientWidth,
 				t: node.clientHeight
 			}
@@ -4312,14 +4312,14 @@ function _Browser_getElement(id)
 		return {
 			ak: _Browser_getScene(),
 			an: {
-				K: x,
-				L: y,
+				L: x,
+				M: y,
 				y: _Browser_doc.documentElement.clientWidth,
 				t: _Browser_doc.documentElement.clientHeight
 			},
 			as: {
-				K: x + rect.left,
-				L: y + rect.top,
+				L: x + rect.left,
+				M: y + rect.top,
 				y: rect.width,
 				t: rect.height
 			}
@@ -4357,8 +4357,8 @@ function _Browser_load(url)
 	}));
 }
 var author$project$Main$Model = F6(
-	function (time, focus, task, rest, _void, emphasis) {
-		return {g: emphasis, G: focus, H: rest, I: task, R: time, J: _void};
+	function (time, emphasis, focus, task, rest, _void) {
+		return {g: emphasis, G: focus, H: rest, I: task, J: time, K: _void};
 	});
 var author$project$Main$NoEmphasis = 0;
 var author$project$Main$Reset = function (a) {
@@ -5417,23 +5417,28 @@ var elm$time$Time$every = F2(
 var author$project$Main$subscriptions = function (model) {
 	return A2(elm$time$Time$every, 1000, author$project$Main$Tick);
 };
-var elm$core$Platform$Cmd$batch = _Platform_batch;
-var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var elm$time$Time$posixToMillis = function (_n0) {
 	var millis = _n0;
 	return millis;
 };
+var author$project$Main$posixDays = function (time) {
+	var millisInDay = 86400000;
+	return (elm$time$Time$posixToMillis(time) / millisInDay) | 0;
+};
+var elm$core$Basics$ge = _Utils_ge;
+var elm$core$Platform$Cmd$batch = _Platform_batch;
+var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
 			case 0:
 				var startTime = msg.a;
 				return _Utils_Tuple2(
-					A6(author$project$Main$Model, startTime, 0, 0, 0, 0, model.g),
+					A6(author$project$Main$Model, startTime, model.g, 0, 0, 0, 0),
 					elm$core$Platform$Cmd$none);
 			case 1:
 				var newTime = msg.a;
-				var deltaMillis = elm$time$Time$posixToMillis(newTime) - elm$time$Time$posixToMillis(model.R);
+				var deltaMillis = elm$time$Time$posixToMillis(newTime) - elm$time$Time$posixToMillis(model.J);
 				var newModel = function () {
 					var _n1 = model.g;
 					switch (_n1) {
@@ -5454,15 +5459,17 @@ var author$project$Main$update = F2(
 						default:
 							return _Utils_update(
 								model,
-								{J: model.J + deltaMillis});
+								{K: model.K + deltaMillis});
 					}
 				}();
 				var dayAsMillis = ((24 * 60) * 60) * 1000;
 				return _Utils_Tuple2(
 					_Utils_update(
 						newModel,
-						{R: newTime}),
-					false ? A2(elm$core$Task$perform, author$project$Main$Reset, elm$time$Time$now) : elm$core$Platform$Cmd$none);
+						{J: newTime}),
+					(_Utils_cmp(
+						author$project$Main$posixDays(newTime),
+						author$project$Main$posixDays(model.J)) > -1) ? A2(elm$core$Task$perform, author$project$Main$Reset, elm$time$Time$now) : elm$core$Platform$Cmd$none);
 			default:
 				var newEmphasis = msg.a;
 				return _Utils_Tuple2(
@@ -5476,7 +5483,7 @@ var author$project$Main$Focus = 1;
 var author$project$Main$Rest = 3;
 var author$project$Main$Task = 2;
 var author$project$Main$Void = 4;
-var author$project$Main$Emphasize = function (a) {
+var author$project$Main$Select = function (a) {
 	return {$: 2, a: a};
 };
 var author$project$Main$emphasisToString = function (emphasis) {
@@ -5563,7 +5570,7 @@ var elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		elm$json$Json$Decode$succeed(msg));
 };
-var author$project$Main$btn = F2(
+var author$project$Main$button_ = F2(
 	function (buttonEmphasis, modelEmphasis) {
 		var isOn = _Utils_eq(buttonEmphasis, modelEmphasis);
 		return A2(
@@ -5577,7 +5584,7 @@ var author$project$Main$btn = F2(
 							_Utils_Tuple2('button-on', isOn)
 						])),
 					elm$html$Html$Events$onClick(
-					isOn ? author$project$Main$Emphasize(0) : author$project$Main$Emphasize(buttonEmphasis))
+					isOn ? author$project$Main$Select(0) : author$project$Main$Select(buttonEmphasis))
 				]),
 			_List_fromArray(
 				[
@@ -5616,7 +5623,7 @@ var elm$time$Time$toAdjustedMinutesHelp = F3(
 			} else {
 				var era = eras.a;
 				var olderEras = eras.b;
-				if (_Utils_cmp(era.P, posixMinutes) < 0) {
+				if (_Utils_cmp(era.Q, posixMinutes) < 0) {
 					return posixMinutes + era.aa;
 				} else {
 					var $temp$defaultOffset = defaultOffset,
@@ -5671,7 +5678,7 @@ var elm$time$Time$toSecond = F2(
 				1000));
 	});
 var elm$time$Time$utc = A2(elm$time$Time$Zone, 0, _List_Nil);
-var author$project$Main$millisToHtml = function (time) {
+var author$project$Main$clockTime = function (time) {
 	var seconds = A2(
 		elm$time$Time$toSecond,
 		elm$time$Time$utc,
@@ -5784,61 +5791,193 @@ var author$project$Main$clock = F2(
 						[
 							elm$html$Html$Attributes$class('clock-time')
 						]),
-					author$project$Main$millisToHtml(time))
+					author$project$Main$clockTime(time))
 				]));
 	});
 var elm$html$Html$i = _VirtualDom_node('i');
+var elm$html$Html$li = _VirtualDom_node('li');
 var elm$html$Html$p = _VirtualDom_node('p');
+var elm$html$Html$ul = _VirtualDom_node('ul');
 var author$project$Main$description = function (emphasis) {
 	switch (emphasis) {
 		case 0:
-			return A2(
-				elm$html$Html$p,
-				_List_Nil,
-				_List_fromArray(
-					[
-						elm$html$Html$text('Tap on an '),
-						A2(
-						elm$html$Html$i,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text('emphasis')
-							])),
-						elm$html$Html$text(' below to begin recording how you use time.')
-					]));
+			return _List_fromArray(
+				[
+					A2(
+					elm$html$Html$p,
+					_List_Nil,
+					_List_fromArray(
+						[
+							elm$html$Html$text('Tap on an '),
+							A2(
+							elm$html$Html$i,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text('emphasis')
+								])),
+							elm$html$Html$text(' below to begin recording how you use time.')
+						]))
+				]);
 		case 1:
-			return A2(
-				elm$html$Html$p,
-				_List_Nil,
-				_List_fromArray(
-					[
-						elm$html$Html$text('Important and time-sensitive activity, requiring attention and effort.')
-					]));
+			return _List_fromArray(
+				[
+					A2(
+					elm$html$Html$p,
+					_List_Nil,
+					_List_fromArray(
+						[
+							elm$html$Html$text('Important, meaningful, or time-sensitive work, requiring attention and effort.')
+						])),
+					A2(
+					elm$html$Html$ul,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$li,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text('An occupation')
+								])),
+							A2(
+							elm$html$Html$li,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text('Studying for school')
+								])),
+							A2(
+							elm$html$Html$li,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text('Paying overdue bills')
+								]))
+						]))
+				]);
 		case 2:
-			return A2(
-				elm$html$Html$p,
-				_List_Nil,
-				_List_fromArray(
-					[
-						elm$html$Html$text('Somewhat helpful, but often interruptive or distracting activity.')
-					]));
+			return _List_fromArray(
+				[
+					A2(
+					elm$html$Html$p,
+					_List_Nil,
+					_List_fromArray(
+						[
+							elm$html$Html$text('Though beneficial or necessary, these tasks easily splinter attention and interrupt more significant activity.')
+						])),
+					A2(
+					elm$html$Html$ul,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$li,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text('Reviewing emails or notifications')
+								])),
+							A2(
+							elm$html$Html$li,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text('Reorganizing a desk')
+								])),
+							A2(
+							elm$html$Html$li,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text('Reading the news')
+								]))
+						])),
+					A2(
+					elm$html$Html$p,
+					_List_Nil,
+					_List_fromArray(
+						[
+							elm$html$Html$text('Try to finish these all at once in a batch.')
+						]))
+				]);
 		case 3:
-			return A2(
-				elm$html$Html$p,
-				_List_Nil,
-				_List_fromArray(
-					[
-						elm$html$Html$text('Regenerative activity which yields long-term benefit.')
-					]));
+			return _List_fromArray(
+				[
+					A2(
+					elm$html$Html$p,
+					_List_Nil,
+					_List_fromArray(
+						[
+							elm$html$Html$text('Regenerative activity which yields long-term benefit for yourself and others, but is often neglected.')
+						])),
+					A2(
+					elm$html$Html$ul,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$li,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text('Rest, play, exercise, hobbies, meals')
+								])),
+							A2(
+							elm$html$Html$li,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text('Socializing and investing in relationships')
+								])),
+							A2(
+							elm$html$Html$li,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text('Reflection and journaling')
+								]))
+						]))
+				]);
 		default:
-			return A2(
-				elm$html$Html$p,
-				_List_Nil,
-				_List_fromArray(
-					[
-						elm$html$Html$text('Low value activity that wastes time and resources and may even cause harm.')
-					]));
+			return _List_fromArray(
+				[
+					A2(
+					elm$html$Html$p,
+					_List_Nil,
+					_List_fromArray(
+						[
+							elm$html$Html$text('Low value activity that wastes time and resources and may even cause harm.')
+						])),
+					A2(
+					elm$html$Html$ul,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$li,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text('Procrastination and idleness')
+								])),
+							A2(
+							elm$html$Html$li,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text('Excessive social media usage')
+								])),
+							A2(
+							elm$html$Html$li,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text('Binge entertainment consumption')
+								]))
+						]))
+				]);
 	}
 };
 var elm$core$Basics$neq = _Utils_notEqual;
@@ -5891,7 +6030,7 @@ var author$project$Main$view = function (model) {
 								A2(author$project$Main$clock, 1, model.G),
 								A2(author$project$Main$clock, 2, model.I),
 								A2(author$project$Main$clock, 3, model.H),
-								A2(author$project$Main$clock, 4, model.J)
+								A2(author$project$Main$clock, 4, model.K)
 							])),
 						A2(
 						elm$html$Html$section,
@@ -5899,10 +6038,7 @@ var author$project$Main$view = function (model) {
 							[
 								elm$html$Html$Attributes$class('description')
 							]),
-						_List_fromArray(
-							[
-								author$project$Main$description(model.g)
-							])),
+						author$project$Main$description(model.g)),
 						A2(
 						elm$html$Html$footer,
 						_List_fromArray(
@@ -5919,10 +6055,10 @@ var author$project$Main$view = function (model) {
 									]),
 								_List_fromArray(
 									[
-										A2(author$project$Main$btn, 1, model.g),
-										A2(author$project$Main$btn, 2, model.g),
-										A2(author$project$Main$btn, 3, model.g),
-										A2(author$project$Main$btn, 4, model.g)
+										A2(author$project$Main$button_, 1, model.g),
+										A2(author$project$Main$button_, 2, model.g),
+										A2(author$project$Main$button_, 3, model.g),
+										A2(author$project$Main$button_, 4, model.g)
 									]))
 							]))
 					]))
