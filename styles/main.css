@@ -95,7 +95,7 @@ body {
 }
 
 .description > ul {
-    padding-left: 1.5rem;
+    padding-left: 1.75rem;
     margin: 1rem 0;
 }
 
@@ -185,6 +185,21 @@ body {
 
 
 /* SCREENS */
+
+@media screen and (min-width: 26rem) {
+    .clock-time {
+        font-size: 48px;
+    }
+
+    .clock-unit {
+        font-size: 26px;
+    }
+
+    .clocks {
+        padding: 0.5rem 0;
+    }
+}
+
 
 @media screen and (min-width: 42rem) {
     .clock-time {
