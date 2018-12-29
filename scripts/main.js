@@ -5425,7 +5425,6 @@ var author$project$Main$posixDays = function (time) {
 	var millisInDay = 86400000;
 	return (elm$time$Time$posixToMillis(time) / millisInDay) | 0;
 };
-var elm$core$Basics$ge = _Utils_ge;
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Main$update = F2(
@@ -5469,7 +5468,7 @@ var author$project$Main$update = F2(
 						{J: newTime}),
 					(_Utils_cmp(
 						author$project$Main$posixDays(newTime),
-						author$project$Main$posixDays(model.J)) > -1) ? A2(elm$core$Task$perform, author$project$Main$Reset, elm$time$Time$now) : elm$core$Platform$Cmd$none);
+						author$project$Main$posixDays(model.J)) > 0) ? A2(elm$core$Task$perform, author$project$Main$Reset, elm$time$Time$now) : elm$core$Platform$Cmd$none);
 			default:
 				var newEmphasis = msg.a;
 				return _Utils_Tuple2(
@@ -5808,6 +5807,13 @@ var author$project$Main$description = function (emphasis) {
 					_List_Nil,
 					_List_fromArray(
 						[
+							elm$html$Html$text('I help increase daily intentionality and balance by logging how time is used.')
+						])),
+					A2(
+					elm$html$Html$p,
+					_List_Nil,
+					_List_fromArray(
+						[
 							elm$html$Html$text('Tap on an '),
 							A2(
 							elm$html$Html$i,
@@ -5816,7 +5822,7 @@ var author$project$Main$description = function (emphasis) {
 								[
 									elm$html$Html$text('emphasis')
 								])),
-							elm$html$Html$text(' below to begin recording how you use time.')
+							elm$html$Html$text(' below to begin.')
 						]))
 				]);
 		case 1:
@@ -5865,7 +5871,7 @@ var author$project$Main$description = function (emphasis) {
 					_List_Nil,
 					_List_fromArray(
 						[
-							elm$html$Html$text('Though beneficial or necessary, these tasks easily splinter attention and interrupt more significant activity.')
+							elm$html$Html$text('Though beneficial or necessary, these tasks easily interrupt focus and mindfulness.')
 						])),
 					A2(
 					elm$html$Html$ul,
@@ -5899,7 +5905,7 @@ var author$project$Main$description = function (emphasis) {
 					_List_Nil,
 					_List_fromArray(
 						[
-							elm$html$Html$text('Try to finish these all at once in a batch.')
+							elm$html$Html$text('Try finishing these all at once in a batch.')
 						]))
 				]);
 		case 3:
@@ -5910,7 +5916,7 @@ var author$project$Main$description = function (emphasis) {
 					_List_Nil,
 					_List_fromArray(
 						[
-							elm$html$Html$text('Regenerative activity which yields long-term benefit for yourself and others, but is often neglected.')
+							elm$html$Html$text('Regenerative activity which yields long-term benefit, but is often neglected.')
 						])),
 					A2(
 					elm$html$Html$ul,
@@ -5948,7 +5954,7 @@ var author$project$Main$description = function (emphasis) {
 					_List_Nil,
 					_List_fromArray(
 						[
-							elm$html$Html$text('Low value activity that wastes time and resources and may even cause harm.')
+							elm$html$Html$text('Low-value activity that wastes time and resources, and may even cause harm.')
 						])),
 					A2(
 					elm$html$Html$ul,

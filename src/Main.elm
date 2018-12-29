@@ -90,7 +90,7 @@ update msg model =
                     24 * 60 * 60 * 1000
             in
             ( { newModel | time = newTime }
-            , if posixDays newTime >= posixDays model.time then
+            , if posixDays newTime > posixDays model.time then
                 Task.perform Reset Time.now
 
               else
@@ -225,7 +225,9 @@ description : Emphasis -> List (Html Msg)
 description emphasis =
     case emphasis of
         NoEmphasis ->
-            [ p [] [ text "Tap on an ", i [] [ text "emphasis" ], text " below to begin recording how you use time." ] ]
+            [ p [] [ text "I help increase daily intentionality and balance by logging how time is used." ]
+            , p [] [ text "Tap on an ", i [] [ text "emphasis" ], text " below to begin." ]
+            ]
 
         Focus ->
             [ p [] [ text "Important, meaningful, or time-sensitive work, requiring attention and effort." ]
@@ -237,17 +239,17 @@ description emphasis =
             ]
 
         Task ->
-            [ p [] [ text "Though beneficial or necessary, these tasks easily splinter attention and interrupt more significant activity." ]
+            [ p [] [ text "Though beneficial or necessary, these tasks easily interrupt focus and mindfulness." ]
             , ul []
                 [ li [] [ text "Reviewing emails or notifications" ]
                 , li [] [ text "Reorganizing a desk" ]
                 , li [] [ text "Reading the news" ]
                 ]
-            , p [] [ text "Try to finish these all at once in a batch." ]
+            , p [] [ text "Try finishing these all at once in a batch." ]
             ]
 
         Rest ->
-            [ p [] [ text "Regenerative activity which yields long-term benefit for yourself and others, but is often neglected." ]
+            [ p [] [ text "Regenerative activity which yields long-term benefit, but is often neglected." ]
             , ul []
                 [ li [] [ text "Rest, play, exercise, hobbies, meals" ]
                 , li [] [ text "Socializing and investing in relationships" ]
@@ -256,7 +258,7 @@ description emphasis =
             ]
 
         Void ->
-            [ p [] [ text "Low value activity that wastes time and resources and may even cause harm." ]
+            [ p [] [ text "Low-value activity that wastes time and resources, and may even cause harm." ]
             , ul []
                 [ li [] [ text "Procrastination and idleness" ]
                 , li [] [ text "Excessive social media usage" ]
