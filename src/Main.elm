@@ -1,32 +1,69 @@
-module Main exposing (main)
+port module Main exposing (main)
 
 import Browser
-import Html exposing (..)
+import Html exposing (Html, button, div, footer, h1, header, i, li, main_, p, section, span, text, ul)
 import Html.Attributes exposing (class, classList)
 import Html.Events exposing (onClick)
+import Json.Decode as D
+import Json.Encode as E
 import Task
 import Time
 
 
-main =
-    Browser.document
-        { init = init
-        , update = update
-        , view = view
-        , subscriptions = subscriptions
-        }
+port cache : E.Value -> Cmd msg
+
+
+
+-- CUSTOM TYPES
+
+
+type Emphasis
+    = Focus
+    | Task
+    | Rest
+    | Void
+    | NoEmphasis
+
+
+emphasisToString : Emphasis -> String
+emphasisToString emphasis =
+    case emphasis of
+        Focus ->
+            "Focus"
+
+        Task ->
+            "Task"
+
+        Rest ->
+            "Rest"
+
+        Void ->
+            "Void"
+
+        NoEmphasis ->
+            ""
+
+
+stringToEmphasis : String -> Emphasis
+stringToEmphasis emphasis =
+    if emphasis == "Focus" then
+        Focus
+
+    else if emphasis == "Task" then
+        Task
+
+    else if emphasis == "Rest" then
+        Rest
+
+    else if emphasis == "Void" then
+        Void
+
+    else
+        NoEmphasis
 
 
 
 -- MODEL
-
-
-type Emphasis
-    = NoEmphasis
-    | Focus
-    | Task
-    | Rest
-    | Void
 
 
 type alias Model =
@@ -39,11 +76,57 @@ type alias Model =
     }
 
 
-init : () -> ( Model, Cmd Msg )
-init _ =
-    ( Model (Time.millisToPosix 0) NoEmphasis 0 0 0 0
-    , Task.perform Reset Time.now
-    )
+encodeModel : Model -> E.Value
+encodeModel model =
+    E.object
+        [ ( "time", E.int (Time.posixToMillis model.time) )
+        , ( "emphasis", E.string (emphasisToString model.emphasis) )
+        , ( "focus", E.int model.focus )
+        , ( "task", E.int model.task )
+        , ( "rest", E.int model.rest )
+        , ( "void", E.int model.void )
+        ]
+
+
+decodeModel : D.Decoder Model
+decodeModel =
+    D.map6 Model
+        decodeTime
+        decodeEmphasis
+        (D.field "focus" D.int)
+        (D.field "task" D.int)
+        (D.field "rest" D.int)
+        (D.field "void" D.int)
+
+
+decodeTime : D.Decoder Time.Posix
+decodeTime =
+    D.map Time.millisToPosix
+        (D.field "time" D.int)
+
+
+decodeEmphasis : D.Decoder Emphasis
+decodeEmphasis =
+    D.map stringToEmphasis
+        (D.field "emphasis" D.string)
+
+
+
+-- INIT
+
+
+init : D.Value -> ( Model, Cmd Msg )
+init flags =
+    case D.decodeValue decodeModel flags of
+        Ok cachedModel ->
+            ( cachedModel
+            , Cmd.none
+            )
+
+        Err error ->
+            ( Model (Time.millisToPosix 0) NoEmphasis 0 0 0 0
+            , Task.perform Reset Time.now
+            )
 
 
 
@@ -60,8 +143,12 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Reset startTime ->
-            ( Model startTime model.emphasis 0 0 0 0
-            , Cmd.none
+            let
+                newModel =
+                    Model startTime model.emphasis 0 0 0 0
+            in
+            ( newModel
+            , cache (encodeModel newModel)
             )
 
         Tick newTime ->
@@ -72,48 +159,41 @@ update msg model =
                 newModel =
                     case model.emphasis of
                         NoEmphasis ->
-                            model
+                            { model | time = newTime }
 
                         Focus ->
-                            { model | focus = model.focus + deltaMillis }
+                            { model | time = newTime, focus = model.focus + deltaMillis }
 
                         Task ->
-                            { model | task = model.task + deltaMillis }
+                            { model | time = newTime, task = model.task + deltaMillis }
 
                         Rest ->
-                            { model | rest = model.rest + deltaMillis }
+                            { model | time = newTime, rest = model.rest + deltaMillis }
 
                         Void ->
-                            { model | void = model.void + deltaMillis }
-
-                dayAsMillis =
-                    24 * 60 * 60 * 1000
+                            { model | time = newTime, void = model.void + deltaMillis }
             in
-            ( { newModel | time = newTime }
-            , if posixDays newTime > posixDays model.time then
+            ( newModel
+              -- FIXME
+            , if False then
                 Task.perform Reset Time.now
 
               else
-                Cmd.none
+                cache (encodeModel newModel)
             )
 
         Select newEmphasis ->
-            ( { model | emphasis = newEmphasis }
-            , Cmd.none
+            let
+                newModel =
+                    { model | emphasis = newEmphasis }
+            in
+            ( newModel
+            , cache (encodeModel newModel)
             )
 
 
-posixDays : Time.Posix -> Int
-posixDays time =
-    let
-        millisInDay =
-            86400000
-    in
-    Time.posixToMillis time // millisInDay
 
-
-
--- SUBSCRIPTIONS
+-- SUBS
 
 
 subscriptions : Model -> Sub Msg
@@ -129,7 +209,7 @@ view : Model -> Browser.Document Msg
 view model =
     let
         titleText =
-            title model.emphasis
+            emphasisToTitle model.emphasis
     in
     { title = titleText
     , body =
@@ -156,79 +236,70 @@ view model =
     }
 
 
-title : Emphasis -> String
-title emphasis =
+emphasisToTitle : Emphasis -> String
+emphasisToTitle emphasis =
     let
         subtitle =
             emphasisToString emphasis
     in
-    "Emphasis"
-        ++ (if subtitle /= "" then
-                " • " ++ subtitle
+    if subtitle /= "" then
+        "Emphasis • " ++ subtitle
 
-            else
-                ""
-           )
+    else
+        "Emphasis"
 
 
 clock : Emphasis -> Int -> Html Msg
 clock emphasis time =
     div [ class "clock" ]
         [ div [ class "clock-label" ] [ text (emphasisToString emphasis) ]
-        , div [ class "clock-time" ] (clockTime time)
-        ]
+        , div [ class "clock-time" ]
+            (let
+                hours =
+                    Time.toHour Time.utc (Time.millisToPosix time)
 
+                minutes =
+                    Time.toMinute Time.utc (Time.millisToPosix time)
 
-clockTime : Int -> List (Html Msg)
-clockTime time =
-    let
-        hours =
-            Time.toHour Time.utc (Time.millisToPosix time)
+                seconds =
+                    Time.toSecond Time.utc (Time.millisToPosix time)
+             in
+             if hours > 0 then
+                let
+                    hoursText =
+                        String.fromInt hours
 
-        minutes =
-            Time.toMinute Time.utc (Time.millisToPosix time)
+                    decimal =
+                        floor ((toFloat minutes / 60) * 10)
+                in
+                [ span []
+                    [ text
+                        (if decimal > 0 then
+                            hoursText ++ "." ++ String.fromInt decimal
 
-        seconds =
-            Time.toSecond Time.utc (Time.millisToPosix time)
-    in
-    if hours > 0 then
-        let
-            decimal =
-                floor ((toFloat minutes / 60) * 10)
-        in
-        [ span []
-            [ text
-                (String.fromInt hours
-                    ++ (if decimal > 0 then
-                            "." ++ String.fromInt decimal
+                         else
+                            hoursText
+                        )
+                    ]
+                , span [ class "clock-unit" ] [ text "h" ]
+                ]
 
-                        else
-                            ""
-                       )
-                )
-            ]
-        , span [ class "clock-unit" ] [ text "h" ]
-        ]
+             else if minutes > 0 then
+                [ span [] [ text (String.fromInt minutes) ]
+                , span [ class "clock-unit" ] [ text "m" ]
+                ]
 
-    else if minutes > 0 then
-        [ span [] [ text (String.fromInt minutes) ]
-        , span [ class "clock-unit" ] [ text "m" ]
-        ]
-
-    else
-        [ span [] [ text (String.fromInt seconds) ]
-        , span [ class "clock-unit" ] [ text "s" ]
+             else
+                [ span [] [ text (String.fromInt seconds) ]
+                , span [ class "clock-unit" ] [ text "s" ]
+                ]
+            )
         ]
 
 
 description : Emphasis -> List (Html Msg)
 description emphasis =
     case emphasis of
-        NoEmphasis ->
-            [ p [] [ text "Foster mindfulness, intentionality, and balance by logging time." ]
-            , p [] [ text "Tap on an ", i [] [ text "emphasis" ], text " below to begin." ]
-            ]
-
         Focus ->
             [ p [] [ text "Important, meaningful, or time-sensitive work, requiring attention and effort." ]
             , ul []
@@ -265,6 +336,11 @@ description emphasis =
                 ]
             ]
 
+        NoEmphasis ->
+            [ p [] [ text "Foster mindfulness, intentionality, and balance by logging time." ]
+            , p [] [ text "Tap on an ", i [] [ text "emphasis" ], text " below to begin." ]
+            ]
+
 
 button_ : Emphasis -> Emphasis -> Html Msg
 button_ buttonEmphasis modelEmphasis =
@@ -287,20 +363,15 @@ button_ buttonEmphasis modelEmphasis =
         ]
 
 
-emphasisToString : Emphasis -> String
-emphasisToString emphasis =
-    case emphasis of
-        NoEmphasis ->
-            ""
 
-        Focus ->
-            "Focus"
+-- MAIN
 
-        Task ->
-            "Task"
 
-        Rest ->
-            "Rest"
-
-        Void ->
-            "Void"
+main : Program D.Value Model Msg
+main =
+    Browser.document
+        { init = init
+        , update = update
+        , view = view
+        , subscriptions = subscriptions
+        }

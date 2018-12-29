@@ -16,10 +16,17 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="mobile-web-app-capable" content="yes">
         <script src="/scripts/main.js"></script>
+        <script>
+            window.requestAnimationFrame(function() {
+                var app = Elm.Main.init({
+                    flags: JSON.parse(window.localStorage.getItem("cache"))
+                });
+                app.ports.cache.subscribe(function(data) {
+                    window.localStorage.setItem("cache", JSON.stringify(data));
+                });
+            })
+        </script>
     </head>
     <body>
-        <script type="text/javascript">
-            var app = Elm.Main.init();
-        </script>
     </body>
 </html>
