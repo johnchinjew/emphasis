@@ -2705,7 +2705,7 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		l: func(record.l),
+		m: func(record.m),
 		R: record.R,
 		P: record.P
 	}
@@ -2975,7 +2975,7 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.l;
+		var message = !tag ? value : tag < 3 ? value.a : value.m;
 		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.R;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
@@ -4358,10 +4358,10 @@ function _Browser_load(url)
 }
 var author$project$Main$Model = F6(
 	function (time, emphasis, focus, task, rest, _void) {
-		return {g: emphasis, B: focus, D: rest, G: task, n: time, K: _void};
+		return {g: emphasis, B: focus, D: rest, G: task, i: time, K: _void};
 	});
 var author$project$Main$NoEmphasis = 4;
-var author$project$Main$Reset = function (a) {
+var author$project$Main$StartTime = function (a) {
 	return {$: 0, a: a};
 };
 var author$project$Main$Focus = 0;
@@ -5048,10 +5048,10 @@ var author$project$Main$init = function (flags) {
 				0,
 				0,
 				0),
-			A2(elm$core$Task$perform, author$project$Main$Reset, elm$time$Time$now));
+			A2(elm$core$Task$perform, author$project$Main$StartTime, elm$time$Time$now));
 	}
 };
-var author$project$Main$Tick = function (a) {
+var author$project$Main$NewTime = function (a) {
 	return {$: 1, a: a};
 };
 var elm$time$Time$Every = F2(
@@ -5454,7 +5454,7 @@ var elm$time$Time$every = F2(
 			A2(elm$time$Time$Every, interval, tagger));
 	});
 var author$project$Main$subscriptions = function (model) {
-	return A2(elm$time$Time$every, 1000, author$project$Main$Tick);
+	return A2(elm$time$Time$every, 1000, author$project$Main$NewTime);
 };
 var author$project$Main$cache = _Platform_outgoingPort('cache', elm$core$Basics$identity);
 var author$project$Main$emphasisToString = function (emphasis) {
@@ -5497,7 +5497,7 @@ var author$project$Main$encodeModel = function (model) {
 				_Utils_Tuple2(
 				'time',
 				elm$json$Json$Encode$int(
-					elm$time$Time$posixToMillis(model.n))),
+					elm$time$Time$posixToMillis(model.i))),
 				_Utils_Tuple2(
 				'emphasis',
 				elm$json$Json$Encode$string(
@@ -5516,47 +5516,77 @@ var author$project$Main$encodeModel = function (model) {
 				elm$json$Json$Encode$int(model.K))
 			]));
 };
+var author$project$Main$posixDays = function (time) {
+	var millisInDay = ((1000 * 60) * 60) * 24;
+	var currentMillis = elm$time$Time$posixToMillis(time);
+	return (currentMillis / millisInDay) | 0;
+};
+var author$project$Main$lastMidnight = function (time) {
+	var millisInDay = ((1000 * 60) * 60) * 24;
+	var days = author$project$Main$posixDays(time);
+	var millisInDays = days * millisInDay;
+	return elm$time$Time$millisToPosix(millisInDays);
+};
+var author$project$Main$wasMidnight = F2(
+	function (refTime, time) {
+		var refDays = author$project$Main$posixDays(refTime);
+		var days = author$project$Main$posixDays(time);
+		return _Utils_cmp(days, refDays) > 0;
+	});
 var author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
 			case 0:
 				var startTime = msg.a;
-				var newModel = A6(author$project$Main$Model, startTime, model.g, 0, 0, 0, 0);
+				var newModel = _Utils_update(
+					model,
+					{i: startTime});
 				return _Utils_Tuple2(
 					newModel,
 					author$project$Main$cache(
 						author$project$Main$encodeModel(newModel)));
 			case 1:
 				var newTime = msg.a;
-				var deltaMillis = elm$time$Time$posixToMillis(newTime) - elm$time$Time$posixToMillis(model.n);
 				var newModel = function () {
-					var _n1 = model.g;
-					switch (_n1) {
-						case 4:
-							return _Utils_update(
-								model,
-								{n: newTime});
-						case 0:
-							return _Utils_update(
-								model,
-								{B: model.B + deltaMillis, n: newTime});
-						case 1:
-							return _Utils_update(
-								model,
-								{G: model.G + deltaMillis, n: newTime});
-						case 2:
-							return _Utils_update(
-								model,
-								{D: model.D + deltaMillis, n: newTime});
-						default:
-							return _Utils_update(
-								model,
-								{n: newTime, K: model.K + deltaMillis});
+					if (A2(author$project$Main$wasMidnight, model.i, newTime)) {
+						return A6(
+							author$project$Main$Model,
+							author$project$Main$lastMidnight(newTime),
+							model.g,
+							0,
+							0,
+							0,
+							0);
+					} else {
+						var deltaMillis = elm$time$Time$posixToMillis(newTime) - elm$time$Time$posixToMillis(model.i);
+						var _n1 = model.g;
+						switch (_n1) {
+							case 4:
+								return _Utils_update(
+									model,
+									{i: newTime});
+							case 0:
+								return _Utils_update(
+									model,
+									{B: model.B + deltaMillis, i: newTime});
+							case 1:
+								return _Utils_update(
+									model,
+									{G: model.G + deltaMillis, i: newTime});
+							case 2:
+								return _Utils_update(
+									model,
+									{D: model.D + deltaMillis, i: newTime});
+							default:
+								return _Utils_update(
+									model,
+									{i: newTime, K: model.K + deltaMillis});
+						}
 					}
 				}();
 				return _Utils_Tuple2(
 					newModel,
-					false ? A2(elm$core$Task$perform, author$project$Main$Reset, elm$time$Time$now) : author$project$Main$cache(
+					author$project$Main$cache(
 						author$project$Main$encodeModel(newModel)));
 			default:
 				var newEmphasis = msg.a;
@@ -5569,7 +5599,7 @@ var author$project$Main$update = F2(
 						author$project$Main$encodeModel(newModel)));
 		}
 	});
-var author$project$Main$Select = function (a) {
+var author$project$Main$ChangeEmphasis = function (a) {
 	return {$: 2, a: a};
 };
 var elm$json$Json$Decode$map2 = _Json_map2;
@@ -5654,7 +5684,7 @@ var author$project$Main$button_ = F2(
 							_Utils_Tuple2('button-on', isOn)
 						])),
 					elm$html$Html$Events$onClick(
-					isOn ? author$project$Main$Select(4) : author$project$Main$Select(buttonEmphasis))
+					isOn ? author$project$Main$ChangeEmphasis(4) : author$project$Main$ChangeEmphasis(buttonEmphasis))
 				]),
 			_List_fromArray(
 				[

@@ -125,7 +125,7 @@ init flags =
 
         Err error ->
             ( Model (Time.millisToPosix 0) NoEmphasis 0 0 0 0
-            , Task.perform Reset Time.now
+            , Task.perform StartTime Time.now
             )
 
 
@@ -134,55 +134,55 @@ init flags =
 
 
 type Msg
-    = Reset Time.Posix
-    | Tick Time.Posix
-    | Select Emphasis
+    = StartTime Time.Posix
+    | NewTime Time.Posix
+    | ChangeEmphasis Emphasis
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Reset startTime ->
+        StartTime startTime ->
             let
                 newModel =
-                    Model startTime model.emphasis 0 0 0 0
+                    { model | time = startTime }
             in
             ( newModel
             , cache (encodeModel newModel)
             )
 
-        Tick newTime ->
+        NewTime newTime ->
             let
-                deltaMillis =
-                    Time.posixToMillis newTime - Time.posixToMillis model.time
-
                 newModel =
-                    case model.emphasis of
-                        NoEmphasis ->
-                            { model | time = newTime }
+                    if wasMidnight model.time newTime then
+                        Model (lastMidnight newTime) model.emphasis 0 0 0 0
 
-                        Focus ->
-                            { model | time = newTime, focus = model.focus + deltaMillis }
+                    else
+                        let
+                            deltaMillis =
+                                Time.posixToMillis newTime - Time.posixToMillis model.time
+                        in
+                        case model.emphasis of
+                            NoEmphasis ->
+                                { model | time = newTime }
 
-                        Task ->
-                            { model | time = newTime, task = model.task + deltaMillis }
+                            Focus ->
+                                { model | time = newTime, focus = model.focus + deltaMillis }
 
-                        Rest ->
-                            { model | time = newTime, rest = model.rest + deltaMillis }
+                            Task ->
+                                { model | time = newTime, task = model.task + deltaMillis }
 
-                        Void ->
-                            { model | time = newTime, void = model.void + deltaMillis }
+                            Rest ->
+                                { model | time = newTime, rest = model.rest + deltaMillis }
+
+                            Void ->
+                                { model | time = newTime, void = model.void + deltaMillis }
             in
             ( newModel
-              -- FIXME
-            , if False then
-                Task.perform Reset Time.now
-
-              else
-                cache (encodeModel newModel)
+            , cache (encodeModel newModel)
             )
 
-        Select newEmphasis ->
+        ChangeEmphasis newEmphasis ->
             let
                 newModel =
                     { model | emphasis = newEmphasis }
@@ -192,13 +192,52 @@ update msg model =
             )
 
 
+posixDays : Time.Posix -> Int
+posixDays time =
+    let
+        millisInDay =
+            1000 * 60 * 60 * 24
+
+        currentMillis =
+            Time.posixToMillis time
+    in
+    currentMillis // millisInDay
+
+
+wasMidnight : Time.Posix -> Time.Posix -> Bool
+wasMidnight refTime time =
+    let
+        refDays =
+            posixDays refTime
+
+        days =
+            posixDays time
+    in
+    days > refDays
+
+
+lastMidnight : Time.Posix -> Time.Posix
+lastMidnight time =
+    let
+        millisInDay =
+            1000 * 60 * 60 * 24
+
+        days =
+            posixDays time
+
+        millisInDays =
+            days * millisInDay
+    in
+    Time.millisToPosix millisInDays
+
+
 
 -- SUBS
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Time.every 1000 Tick
+    Time.every 1000 NewTime
 
 
 
@@ -352,10 +391,10 @@ button_ buttonEmphasis modelEmphasis =
         [ classList [ ( "button", True ), ( "button-on", isOn ) ]
         , onClick
             (if isOn then
-                Select NoEmphasis
+                ChangeEmphasis NoEmphasis
 
              else
-                Select buttonEmphasis
+                ChangeEmphasis buttonEmphasis
             )
         ]
         [ div [ class "button-icon" ] []
