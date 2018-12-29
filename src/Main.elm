@@ -225,7 +225,7 @@ description : Emphasis -> List (Html Msg)
 description emphasis =
     case emphasis of
         NoEmphasis ->
-            [ p [] [ text "I help increase daily intentionality and balance by logging how time is used." ]
+            [ p [] [ text "Foster mindfulness, intentionality, and balance by logging time." ]
             , p [] [ text "Tap on an ", i [] [ text "emphasis" ], text " below to begin." ]
             ]
 
@@ -239,13 +239,12 @@ description emphasis =
             ]
 
         Task ->
-            [ p [] [ text "Though beneficial or necessary, these tasks easily interrupt focus and mindfulness." ]
+            [ p [] [ text "Though beneficial or necessary, tasks may interrupt more signficiant activity." ]
             , ul []
-                [ li [] [ text "Reviewing emails or notifications" ]
+                [ li [] [ text "Reviewing emails" ]
                 , li [] [ text "Reorganizing a desk" ]
                 , li [] [ text "Reading the news" ]
                 ]
-            , p [] [ text "Try finishing these all at once in a batch." ]
             ]
 
         Rest ->
@@ -260,9 +259,9 @@ description emphasis =
         Void ->
             [ p [] [ text "Low-value activity that wastes time and resources, and may even cause harm." ]
             , ul []
-                [ li [] [ text "Procrastination and idleness" ]
-                , li [] [ text "Excessive social media usage" ]
+                [ li [] [ text "Excessive social media usage" ]
                 , li [] [ text "Binge entertainment consumption" ]
+                , li [] [ text "Procrastination and idleness" ]
                 ]
             ]
 

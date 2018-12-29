@@ -24,7 +24,7 @@ body {
 
 
 .app {
-    max-width: 44rem;
+    max-width: 42rem;
     margin: 0 auto;
     -webkit-user-select: none;
        -moz-user-select: none;
@@ -186,12 +186,16 @@ body {
 
 /* SCREENS */
 
-@media screen and (min-width: 36rem) {
+@media screen and (min-width: 42rem) {
     .clock-time {
-        font-size: 52px;
+        font-size: 56px;
     }
 
     .clock-unit {
-        font-size: 30px;
+        font-size: 32px;
+    }
+
+    .clocks {
+        padding: 1rem 0;
     }
 }

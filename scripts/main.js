@@ -5807,7 +5807,7 @@ var author$project$Main$description = function (emphasis) {
 					_List_Nil,
 					_List_fromArray(
 						[
-							elm$html$Html$text('I help increase daily intentionality and balance by logging how time is used.')
+							elm$html$Html$text('Foster mindfulness, intentionality, and balance by logging time.')
 						])),
 					A2(
 					elm$html$Html$p,
@@ -5871,7 +5871,7 @@ var author$project$Main$description = function (emphasis) {
 					_List_Nil,
 					_List_fromArray(
 						[
-							elm$html$Html$text('Though beneficial or necessary, these tasks easily interrupt focus and mindfulness.')
+							elm$html$Html$text('Though beneficial or necessary, tasks may interrupt more signficiant activity.')
 						])),
 					A2(
 					elm$html$Html$ul,
@@ -5883,7 +5883,7 @@ var author$project$Main$description = function (emphasis) {
 							_List_Nil,
 							_List_fromArray(
 								[
-									elm$html$Html$text('Reviewing emails or notifications')
+									elm$html$Html$text('Reviewing emails')
 								])),
 							A2(
 							elm$html$Html$li,
@@ -5899,13 +5899,6 @@ var author$project$Main$description = function (emphasis) {
 								[
 									elm$html$Html$text('Reading the news')
 								]))
-						])),
-					A2(
-					elm$html$Html$p,
-					_List_Nil,
-					_List_fromArray(
-						[
-							elm$html$Html$text('Try finishing these all at once in a batch.')
 						]))
 				]);
 		case 3:
@@ -5966,13 +5959,6 @@ var author$project$Main$description = function (emphasis) {
 							_List_Nil,
 							_List_fromArray(
 								[
-									elm$html$Html$text('Procrastination and idleness')
-								])),
-							A2(
-							elm$html$Html$li,
-							_List_Nil,
-							_List_fromArray(
-								[
 									elm$html$Html$text('Excessive social media usage')
 								])),
 							A2(
@@ -5981,6 +5967,13 @@ var author$project$Main$description = function (emphasis) {
 							_List_fromArray(
 								[
 									elm$html$Html$text('Binge entertainment consumption')
+								])),
+							A2(
+							elm$html$Html$li,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text('Procrastination and idleness')
 								]))
 						]))
 				]);
