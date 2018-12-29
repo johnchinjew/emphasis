@@ -310,7 +310,7 @@ description emphasis =
             ]
 
         Task ->
-            [ p [] [ text "Though beneficial or necessary, tasks may interrupt more signficiant activity." ]
+            [ p [] [ text "Though beneficial or necessary, these tasks easily interrupt more signficiant activity." ]
             , ul []
                 [ li [] [ text "Reviewing emails" ]
                 , li [] [ text "Reorganizing a desk" ]
@@ -322,8 +322,8 @@ description emphasis =
             [ p [] [ text "Regenerative activity which yields long-term benefit, but is often neglected." ]
             , ul []
                 [ li [] [ text "Rest, play, exercise, hobbies, meals" ]
-                , li [] [ text "Socializing and investing in relationships" ]
-                , li [] [ text "Reflection and journaling" ]
+                , li [] [ text "Socializing, investing in relationships" ]
+                , li [] [ text "Reflection, journaling" ]
                 ]
             ]
 
@@ -332,12 +332,12 @@ description emphasis =
             , ul []
                 [ li [] [ text "Excessive social media usage" ]
                 , li [] [ text "Binge entertainment consumption" ]
-                , li [] [ text "Procrastination and idleness" ]
+                , li [] [ text "Procrastination, idleness" ]
                 ]
             ]
 
         NoEmphasis ->
-            [ p [] [ text "Foster mindfulness, intentionality, and balance by logging time." ]
+            [ p [] [ text "A tool to foster mindfulness, intentionality, and balance by logging time." ]
             , p [] [ text "Tap on an ", i [] [ text "emphasis" ], text " below to begin." ]
             ]
 

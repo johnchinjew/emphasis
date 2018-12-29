@@ -5914,7 +5914,7 @@ var author$project$Main$description = function (emphasis) {
 					_List_Nil,
 					_List_fromArray(
 						[
-							elm$html$Html$text('Though beneficial or necessary, tasks may interrupt more signficiant activity.')
+							elm$html$Html$text('Though beneficial or necessary, these tasks easily interrupt more signficiant activity.')
 						])),
 					A2(
 					elm$html$Html$ul,
@@ -5971,14 +5971,14 @@ var author$project$Main$description = function (emphasis) {
 							_List_Nil,
 							_List_fromArray(
 								[
-									elm$html$Html$text('Socializing and investing in relationships')
+									elm$html$Html$text('Socializing, investing in relationships')
 								])),
 							A2(
 							elm$html$Html$li,
 							_List_Nil,
 							_List_fromArray(
 								[
-									elm$html$Html$text('Reflection and journaling')
+									elm$html$Html$text('Reflection, journaling')
 								]))
 						]))
 				]);
@@ -6016,7 +6016,7 @@ var author$project$Main$description = function (emphasis) {
 							_List_Nil,
 							_List_fromArray(
 								[
-									elm$html$Html$text('Procrastination and idleness')
+									elm$html$Html$text('Procrastination, idleness')
 								]))
 						]))
 				]);
@@ -6028,7 +6028,7 @@ var author$project$Main$description = function (emphasis) {
 					_List_Nil,
 					_List_fromArray(
 						[
-							elm$html$Html$text('Foster mindfulness, intentionality, and balance by logging time.')
+							elm$html$Html$text('A tool to foster mindfulness, intentionality, and balance by logging time.')
 						])),
 					A2(
 					elm$html$Html$p,

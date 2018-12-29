@@ -24,7 +24,7 @@ body {
 
 
 .app {
-    max-width: 42rem;
+    max-width: 44rem;
     margin: 0 auto;
     -webkit-user-select: none;
        -moz-user-select: none;
@@ -69,14 +69,15 @@ body {
 
 .clock-label {
     font-size: 14px;
+    opacity: 0.8;
 }
 
 .clock-time {
-    font-size: 36px;
+    font-size: 40px;
 }
 
 .clock-unit {
-    font-size: 22px;
+    font-size: 24px;
 }
 
 
@@ -86,8 +87,9 @@ body {
 
 .description {
     padding: 0 1rem;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 1.5;
+    opacity: 0.8;
 }
 
 .description > p {
@@ -180,25 +182,12 @@ body {
 .button-label {
     font-size: 14px;
     padding: 1rem 0;
+    opacity: 0.8;
 }
 
 
 
 /* SCREENS */
-
-@media screen and (min-width: 26rem) {
-    .clock-time {
-        font-size: 48px;
-    }
-
-    .clock-unit {
-        font-size: 26px;
-    }
-
-    .clocks {
-        padding: 0.5rem 0;
-    }
-}
 
 
 @media screen and (min-width: 42rem) {
