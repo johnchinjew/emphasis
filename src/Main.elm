@@ -436,7 +436,7 @@ description emphasis =
             , ul []
                 [ li [] [ text "Reviewing emails" ]
                 , li [] [ text "Reorganizing a desk" ]
-                , li [] [ text "Reading the news" ]
+                , li [] [ text "Following the news" ]
                 ]
             ]
 
@@ -445,7 +445,7 @@ description emphasis =
             , ul []
                 [ li [] [ text "Rest, play, exercise, hobbies, meals" ]
                 , li [] [ text "Socializing, investing in relationships" ]
-                , li [] [ text "Reflection, journaling" ]
+                , li [] [ text "Reflection, journaling, reading" ]
                 ]
             ]
 
