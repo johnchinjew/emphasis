@@ -14,7 +14,7 @@ port cache : E.Value -> Cmd msg
 
 
 
--- CUSTOM TYPES
+-- EMPHASIS
 
 
 type Emphasis
@@ -63,11 +63,119 @@ stringToEmphasis emphasis =
 
 
 
+-- TIME
+
+
+monthToInt : Time.Month -> Int
+monthToInt month =
+    case month of
+        Time.Jan ->
+            1
+
+        Time.Feb ->
+            2
+
+        Time.Mar ->
+            3
+
+        Time.Apr ->
+            4
+
+        Time.May ->
+            5
+
+        Time.Jun ->
+            6
+
+        Time.Jul ->
+            7
+
+        Time.Aug ->
+            8
+
+        Time.Sep ->
+            9
+
+        Time.Oct ->
+            10
+
+        Time.Nov ->
+            11
+
+        Time.Dec ->
+            12
+
+
+wasMidnight : Time.Zone -> Time.Posix -> Time.Posix -> Bool
+wasMidnight zone refTime time =
+    let
+        refDay =
+            Time.toDay zone refTime
+
+        refMonth =
+            monthToInt (Time.toMonth zone refTime)
+
+        refYear =
+            Time.toYear zone refTime
+
+        day =
+            Time.toDay zone time
+
+        month =
+            monthToInt (Time.toMonth zone time)
+
+        year =
+            Time.toYear zone time
+    in
+    if year > refYear then
+        True
+
+    else if month > refMonth then
+        True
+
+    else if day > refDay then
+        True
+
+    else
+        False
+
+
+isMidnight : Time.Zone -> Time.Posix -> Bool
+isMidnight zone time =
+    let
+        hours =
+            Time.toHour zone time
+
+        minutes =
+            Time.toMinute zone time
+
+        seconds =
+            Time.toSecond zone time
+    in
+    hours == 0 && minutes == 0 && seconds == 0
+
+
+prevSecond : Time.Posix -> Time.Posix
+prevSecond time =
+    Time.millisToPosix (Time.posixToMillis time - 1000)
+
+
+lastMidnight : Time.Zone -> Time.Posix -> Time.Posix
+lastMidnight zone time =
+    if isMidnight zone time then
+        time
+
+    else
+        lastMidnight zone (prevSecond time)
+
+
+
 -- MODEL
 
 
 type alias Model =
-    { time : Time.Posix
+    { zone : Time.Zone
+    , time : Time.Posix
     , emphasis : Emphasis
     , focus : Int
     , task : Int
@@ -78,6 +186,7 @@ type alias Model =
 
 encodeModel : Model -> E.Value
 encodeModel model =
+    -- NOTE: We do not encode the model.zone
     E.object
         [ ( "time", E.int (Time.posixToMillis model.time) )
         , ( "emphasis", E.string (emphasisToString model.emphasis) )
@@ -90,7 +199,8 @@ encodeModel model =
 
 decodeModel : D.Decoder Model
 decodeModel =
-    D.map6 Model
+    -- NOTE: We reset the model.zone here
+    D.map6 (Model Time.utc)
         decodeTime
         decodeEmphasis
         (D.field "focus" D.int)
@@ -120,12 +230,15 @@ init flags =
     case D.decodeValue decodeModel flags of
         Ok cachedModel ->
             ( cachedModel
-            , Cmd.none
+            , Task.perform AdjustTimeZone Time.here
             )
 
         Err error ->
-            ( Model (Time.millisToPosix 0) NoEmphasis 0 0 0 0
-            , Task.perform StartTime Time.now
+            ( Model Time.utc (Time.millisToPosix 0) NoEmphasis 0 0 0 0
+            , Cmd.batch
+                [ Task.perform AdjustTimeZone Time.here
+                , Task.perform StartTime Time.now
+                ]
             )
 
 
@@ -135,6 +248,7 @@ init flags =
 
 type Msg
     = StartTime Time.Posix
+    | AdjustTimeZone Time.Zone
     | NewTime Time.Posix
     | ChangeEmphasis Emphasis
 
@@ -151,11 +265,16 @@ update msg model =
             , cache (encodeModel newModel)
             )
 
+        AdjustTimeZone newZone ->
+            ( { model | zone = newZone }
+            , Cmd.none
+            )
+
         NewTime newTime ->
             let
                 newModel =
-                    if wasMidnight model.time newTime then
-                        Model (lastMidnight newTime) model.emphasis 0 0 0 0
+                    if wasMidnight model.zone model.time newTime then
+                        Model model.zone (lastMidnight model.zone newTime) model.emphasis 0 0 0 0
 
                     else
                         let
@@ -179,7 +298,10 @@ update msg model =
                                 { model | time = newTime, void = model.void + deltaMillis }
             in
             ( newModel
-            , cache (encodeModel newModel)
+            , Cmd.batch
+                [ Task.perform AdjustTimeZone Time.here
+                , cache (encodeModel newModel)
+                ]
             )
 
         ChangeEmphasis newEmphasis ->
@@ -190,45 +312,6 @@ update msg model =
             ( newModel
             , cache (encodeModel newModel)
             )
-
-
-posixDays : Time.Posix -> Int
-posixDays time =
-    let
-        millisInDay =
-            1000 * 60 * 60 * 24
-
-        currentMillis =
-            Time.posixToMillis time
-    in
-    currentMillis // millisInDay
-
-
-wasMidnight : Time.Posix -> Time.Posix -> Bool
-wasMidnight refTime time =
-    let
-        refDays =
-            posixDays refTime
-
-        days =
-            posixDays time
-    in
-    days > refDays
-
-
-lastMidnight : Time.Posix -> Time.Posix
-lastMidnight time =
-    let
-        millisInDay =
-            1000 * 60 * 60 * 24
-
-        days =
-            posixDays time
-
-        millisInDays =
-            days * millisInDay
-    in
-    Time.millisToPosix millisInDays
 
 
 
