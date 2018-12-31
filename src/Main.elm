@@ -452,9 +452,9 @@ description emphasis =
         Void ->
             [ p [] [ text "Low-value activity that wastes time and resources, and may even cause harm." ]
             , ul []
-                [ li [] [ text "Excessive social media usage" ]
-                , li [] [ text "Binge entertainment consumption" ]
+                [ li [] [ text "Excessive media consumption" ]
                 , li [] [ text "Procrastination, idleness" ]
+                , li [] [ text "Unbalanced overworking" ]
                 ]
             ]
 

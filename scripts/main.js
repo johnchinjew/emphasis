@@ -6116,7 +6116,7 @@ var author$project$Main$description = function (emphasis) {
 							_List_Nil,
 							_List_fromArray(
 								[
-									elm$html$Html$text('Reading the news')
+									elm$html$Html$text('Following the news')
 								]))
 						]))
 				]);
@@ -6154,7 +6154,7 @@ var author$project$Main$description = function (emphasis) {
 							_List_Nil,
 							_List_fromArray(
 								[
-									elm$html$Html$text('Reflection, journaling')
+									elm$html$Html$text('Reflection, journaling, reading')
 								]))
 						]))
 				]);
@@ -6178,14 +6178,7 @@ var author$project$Main$description = function (emphasis) {
 							_List_Nil,
 							_List_fromArray(
 								[
-									elm$html$Html$text('Excessive social media usage')
-								])),
-							A2(
-							elm$html$Html$li,
-							_List_Nil,
-							_List_fromArray(
-								[
-									elm$html$Html$text('Binge entertainment consumption')
+									elm$html$Html$text('Excessive media consumption')
 								])),
 							A2(
 							elm$html$Html$li,
@@ -6193,6 +6186,13 @@ var author$project$Main$description = function (emphasis) {
 							_List_fromArray(
 								[
 									elm$html$Html$text('Procrastination, idleness')
+								])),
+							A2(
+							elm$html$Html$li,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text('Unbalanced overworking')
 								]))
 						]))
 				]);
