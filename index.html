@@ -18,17 +18,17 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="white">
         <script src="/scripts/main.js"></script>
-        <script>
-            window.requestAnimationFrame(function() {
-                var app = Elm.Main.init({
-                    flags: JSON.parse(window.localStorage.getItem("cache"))
-                });
-                app.ports.cache.subscribe(function(data) {
-                    window.localStorage.setItem("cache", JSON.stringify(data));
-                });
-            })
-        </script>
     </head>
     <body>
+        <main class="app"></main>
+        <script type="text/javascript">
+            var app = Elm.Main.init({
+                node: document.querySelector(".app"),
+                flags: JSON.parse(window.localStorage.getItem("cache"))
+            });
+            app.ports.cache.subscribe(function(data) {
+                window.localStorage.setItem("cache", JSON.stringify(data));
+            });
+        </script>
     </body>
 </html>

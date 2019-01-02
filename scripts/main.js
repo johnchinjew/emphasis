@@ -5466,7 +5466,7 @@ var elm$time$Time$every = F2(
 			A2(elm$time$Time$Every, interval, tagger));
 	});
 var author$project$Main$subscriptions = function (model) {
-	return A2(elm$time$Time$every, 1000, author$project$Main$NewTime);
+	return A2(elm$time$Time$every, 200, author$project$Main$NewTime);
 };
 var author$project$Main$cache = _Platform_outgoingPort('cache', elm$core$Basics$identity);
 var author$project$Main$emphasisToString = function (emphasis) {
@@ -6235,80 +6235,74 @@ var elm$html$Html$header = _VirtualDom_node('header');
 var elm$html$Html$main_ = _VirtualDom_node('main');
 var elm$html$Html$section = _VirtualDom_node('section');
 var author$project$Main$view = function (model) {
-	var titleText = author$project$Main$emphasisToTitle(model.g);
-	return {
-		ar: _List_fromArray(
+	return A2(
+		elm$html$Html$main_,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$class('app')
+			]),
+		_List_fromArray(
 			[
 				A2(
-				elm$html$Html$main_,
+				elm$html$Html$header,
 				_List_fromArray(
 					[
-						elm$html$Html$Attributes$class('app')
+						elm$html$Html$Attributes$class('title')
 					]),
 				_List_fromArray(
 					[
 						A2(
-						elm$html$Html$header,
+						elm$html$Html$h1,
+						_List_Nil,
 						_List_fromArray(
 							[
-								elm$html$Html$Attributes$class('title')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$h1,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text(titleText)
-									]))
-							])),
+								elm$html$Html$text(
+								author$project$Main$emphasisToTitle(model.g))
+							]))
+					])),
+				A2(
+				elm$html$Html$section,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('clocks')
+					]),
+				_List_fromArray(
+					[
+						A2(author$project$Main$clock, 0, model.B),
+						A2(author$project$Main$clock, 1, model.G),
+						A2(author$project$Main$clock, 2, model.D),
+						A2(author$project$Main$clock, 3, model.K)
+					])),
+				A2(
+				elm$html$Html$section,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('description')
+					]),
+				author$project$Main$description(model.g)),
+				A2(
+				elm$html$Html$footer,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('buttons-outer')
+					]),
+				_List_fromArray(
+					[
 						A2(
-						elm$html$Html$section,
+						elm$html$Html$div,
 						_List_fromArray(
 							[
-								elm$html$Html$Attributes$class('clocks')
+								elm$html$Html$Attributes$class('buttons-inner')
 							]),
 						_List_fromArray(
 							[
-								A2(author$project$Main$clock, 0, model.B),
-								A2(author$project$Main$clock, 1, model.G),
-								A2(author$project$Main$clock, 2, model.D),
-								A2(author$project$Main$clock, 3, model.K)
-							])),
-						A2(
-						elm$html$Html$section,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('description')
-							]),
-						author$project$Main$description(model.g)),
-						A2(
-						elm$html$Html$footer,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('buttons-outer')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('buttons-inner')
-									]),
-								_List_fromArray(
-									[
-										A2(author$project$Main$button_, 0, model.g),
-										A2(author$project$Main$button_, 1, model.g),
-										A2(author$project$Main$button_, 2, model.g),
-										A2(author$project$Main$button_, 3, model.g)
-									]))
+								A2(author$project$Main$button_, 0, model.g),
+								A2(author$project$Main$button_, 1, model.g),
+								A2(author$project$Main$button_, 2, model.g),
+								A2(author$project$Main$button_, 3, model.g)
 							]))
 					]))
-			]),
-		aF: titleText
-	};
+			]));
 };
 var elm$browser$Browser$External = function (a) {
 	return {$: 1, a: a};
@@ -6455,8 +6449,8 @@ var elm$url$Url$fromString = function (str) {
 		1,
 		A2(elm$core$String$dropLeft, 8, str)) : elm$core$Maybe$Nothing);
 };
-var elm$browser$Browser$document = _Browser_document;
+var elm$browser$Browser$element = _Browser_element;
 var elm$json$Json$Decode$value = _Json_decodeValue;
-var author$project$Main$main = elm$browser$Browser$document(
+var author$project$Main$main = elm$browser$Browser$element(
 	{ay: author$project$Main$init, aE: author$project$Main$subscriptions, aG: author$project$Main$update, aI: author$project$Main$view});
 _Platform_export({'Main':{'init':author$project$Main$main(elm$json$Json$Decode$value)(0)}});}(this));

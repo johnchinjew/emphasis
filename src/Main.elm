@@ -320,42 +320,35 @@ update msg model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Time.every 1000 NewTime
+    -- NOTE: 200ms for more precision
+    Time.every 200 NewTime
 
 
 
 -- VIEW
 
 
-view : Model -> Browser.Document Msg
+view : Model -> Html Msg
 view model =
-    let
-        titleText =
-            emphasisToTitle model.emphasis
-    in
-    { title = titleText
-    , body =
-        [ main_ [ class "app" ]
-            [ header [ class "title" ]
-                [ h1 [] [ text titleText ] ]
-            , section [ class "clocks" ]
-                [ clock Focus model.focus
-                , clock Task model.task
-                , clock Rest model.rest
-                , clock Void model.void
-                ]
-            , section [ class "description" ] (description model.emphasis)
-            , footer [ class "buttons-outer" ]
-                [ div [ class "buttons-inner" ]
-                    [ button_ Focus model.emphasis
-                    , button_ Task model.emphasis
-                    , button_ Rest model.emphasis
-                    , button_ Void model.emphasis
-                    ]
+    main_ [ class "app" ]
+        [ header [ class "title" ]
+            [ h1 [] [ text <| emphasisToTitle model.emphasis ] ]
+        , section [ class "clocks" ]
+            [ clock Focus model.focus
+            , clock Task model.task
+            , clock Rest model.rest
+            , clock Void model.void
+            ]
+        , section [ class "description" ] (description model.emphasis)
+        , footer [ class "buttons-outer" ]
+            [ div [ class "buttons-inner" ]
+                [ button_ Focus model.emphasis
+                , button_ Task model.emphasis
+                , button_ Rest model.emphasis
+                , button_ Void model.emphasis
                 ]
             ]
         ]
-    }
 
 
 emphasisToTitle : Emphasis -> String
@@ -491,7 +484,7 @@ button_ buttonEmphasis modelEmphasis =
 
 main : Program D.Value Model Msg
 main =
-    Browser.document
+    Browser.element
         { init = init
         , update = update
         , view = view
