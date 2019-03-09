@@ -75,6 +75,7 @@ body {
 
 .clock-time {
     font-size: 40px;
+    font-variant-numeric: tabular-nums;
 }
 
 .clock-unit {
